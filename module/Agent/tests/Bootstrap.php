@@ -1,5 +1,5 @@
 <?php
-namespace DeploymentTest;
+namespace AgentTest;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;

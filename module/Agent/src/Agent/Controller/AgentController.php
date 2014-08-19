@@ -1,47 +1,40 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Agent\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Config;
+use Zend\Config\Config;
+
+use Zend\Http\Client;
+use Zend\Http\Request;
 
 class AgentController extends AbstractActionController
 {
     public function indexAction()
     {
-        $config = new Config(include 'config.php');
-
-        $client = new Client();
-        var_dump($config->server_url);
-        $client->setUri($config->server_url);
-        $client->setOptions(array(
-            'maxredirects' => 1,
-            'timeout'      => 30
-        ));
-        $request = new Request();
-
-        var_dump('send');
-        $response = $client->send($request);
-        var_dump('get content');
-
-        $body = $response->getContent();
-        var_dump('put content');
-        file_put_contents("temp.tar",$body);
-
-
+        $settings = $this->getServiceLocator()->get('config');
+        $config = new Config($settings['deployAgent']);
         try {
-            $phar = new \PharData('temp.tar');
-            $phar->extractTo($config->dest_path, null, true);
-        } catch (Exception $e) {
+            $client = new Client($config->packageUrl, array(
+                'maxredirects' => 1,
+                'timeout'      => 30,
+                'sslverifypeer'      => false,
+            ));
 
+            $request = new Request();
+            $response = $client->send($request);
+            $body = $response->getContent();
+
+            file_put_contents("temp.tar",$body);
+            $phar = new \PharData('temp.tar');
+            $phar->extractTo($config->destPath, null, true);
+        }
+        catch (Zend_Http_Client_Adapter_Exception $e) {
+            var_dump($e->getMessage());
+        }
+        catch (Exception $e) {
+            var_dump($e->getMessage());
         }
         return new ViewModel(array());
     }

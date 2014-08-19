@@ -2,8 +2,8 @@
 
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
-        <testsuite name="ContinuousPhp_deployment">
-            <directory>./DeploymentTest</directory>
+        <testsuite name="ContinuousPhp_DeployAgent">
+            <directory>./AgentTest</directory>
         </testsuite>
     </testsuites>
 </phpunit>
