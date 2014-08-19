@@ -11,23 +11,29 @@ namespace Agent\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Config;
 
 class AgentController extends AbstractActionController
 {
     public function indexAction()
     {
-        $config = new Zend\Config\Config(include 'config.php');
+        $config = new Config(include 'config.php');
 
         $client = new Client();
+        var_dump($config->server_url);
         $client->setUri($config->server_url);
         $client->setOptions(array(
             'maxredirects' => 1,
             'timeout'      => 30
         ));
         $request = new Request();
+
+        var_dump('send');
         $response = $client->send($request);
+        var_dump('get content');
 
         $body = $response->getContent();
+        var_dump('put content');
         file_put_contents("temp.tar",$body);
 
 
