@@ -12,5 +12,11 @@ if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['RE
 // Setup autoloading
 require 'init_autoloader.php';
 
+// Archive_Tar from PEAR (using pear install Archive_Tar)
+/** !!! Pear is already installed in Php.ini with Zend_Server !!! */
+/** For more information: http://pear.php.net/manual/en/installation.checking.php */
+require_once 'Archive/Tar.php';
+
+
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();

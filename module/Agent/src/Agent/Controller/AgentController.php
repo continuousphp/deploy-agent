@@ -7,7 +7,10 @@ use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 
 use Zend\Http\Client;
-use Zend\Http\Request;
+use Zend\Http\Response;
+use Zend\Filter\Decompress;
+
+use Agent\Service\FileSystem;
 
 class AgentController extends AbstractActionController
 {
@@ -16,22 +19,47 @@ class AgentController extends AbstractActionController
         $settings = $this->getServiceLocator()->get('config');
         $config = new Config($settings['deployAgent']);
         try {
+            $dir = '/tmp/deploy-agent/';
+            $gzFileName = 'tarball.tar.gz';
+            $tarFileName = 'tarball.tar';
+            $tarball = $dir . $gzFileName ;
+
             $client = new Client($config->packageUrl, array(
-                'maxredirects' => 1,
-                'timeout'      => 30,
-                'sslverifypeer'      => false,
+                'sslverifypeer' => null,
+//                'outputstream'    => true,
+                'sslallowselfsigned' => null,
             ));
+            $client->setStream();
+            $response = $client->send();
 
-            $request = new Request();
-            $response = $client->send($request);
-            $body = $response->getContent();
+            // copy stream
+            FileSystem::mkdirp($dir, 0777, true);
+            copy($response->getStreamName(), $tarball);
+            $fp = fopen($tarball, 'w');
+            stream_copy_to_stream($response->getStream(), $fp);
+            FileSystem::mkdirp($config->destPath, 0777, true);
 
-            file_put_contents("temp.tar",$body);
-            $phar = new \PharData('temp.tar');
-            $phar->extractTo($config->destPath, null, true);
-        }
-        catch (Zend_Http_Client_Adapter_Exception $e) {
-            var_dump($e->getMessage());
+
+            /** Doc from http://unofficial-zf2.readthedocs.org/en/latest/modules/zend.filter.compress.html */
+            $options = array(
+                'adapter' => 'Gz',
+                'options' => array(
+                    'target' => $config->destPath,
+                )
+            );
+            $filter = new Decompress($options);
+            $decompressed = $filter->filter($tarball);
+            $tar = $dir . $tarFileName;
+            file_put_contents($tar, $decompressed);
+//            var_dump($decompressed);
+
+            $options['adapter'] = 'Tar';
+            $filter = new Decompress($options);
+            $filter->setArchive($tar);
+            if (is_file($tar))
+                $decompressed = $filter->filter($tar);
+            var_dump($decompressed);
+
         }
         catch (Exception $e) {
             var_dump($e->getMessage());
