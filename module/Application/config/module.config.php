@@ -8,9 +8,6 @@
  */
 // 'http://github.com/zendframework/ZendSkeletonModule/tarball/master',
 return array(
-    'destPath'=> 'C:\var\www\workspace',
-    'serverUrl' => 'http://github.com/zendframework/ZendSkeletonModule/tarball/master',
-
     'router' => array(
         'routes' => array(
             'home' => array(

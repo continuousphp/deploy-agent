@@ -17,17 +17,6 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $config = $this->getServiceLocator()->get('config');
-        $tarPath = $config['destPath'] . '/deploy.tar';
-        file_put_contents($tarPath . '.gz', file_get_contents($config['serverUrl']));
-        try {
-            $phar = new \PharData($tarPath . '.gz');
-            $phar->decompress();
-            $phar = new \PharData($tarPath);
-            $phar->extractTo($config['destPath'], null, true);
-        } catch (\Exception $e) {
-
-        }
         return new ViewModel(array());
     }
 }

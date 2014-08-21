@@ -10,5 +10,6 @@ return array(
     'deployAgent' => array(
         'destPath'=> '/tmp/deploy-agent/',
         'packageUrl' => 'http://github.com/zendframework/ZendSkeletonModule/tarball/master',
+        'applicationName' => 'MyContinuousProject',
     )
 );

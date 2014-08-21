@@ -15,25 +15,26 @@ class AgentController extends AbstractActionController
     {
         $settings = $this->getServiceLocator()->get('config');
         $config = new Config($settings['deployAgent']);
+
+        $tarPath = $config->get('destPath') . 'deploy.tar';
+        $apiKey = 000000;
+        $other = 000000;
+        $url = $config->get('packageUrl') . '?api_key=' . $apiKey . '&other' . $other;
+        if(!file_exists($config->get('destPath'))){
+            mkdir($config->get('destPath'));
+        }
+        file_put_contents($tarPath . '.gz',file_get_contents($url));
         try {
-            $client = new Client($config->packageUrl, array(
-                'maxredirects' => 1,
-                'timeout'      => 30,
-                'sslverifypeer'      => false,
-            ));
+            $phar = new \PharData($tarPath . '.gz');
+            $phar->decompress();
+            $phar = new \PharData($tarPath);
+            $phar->extractTo($config->get('destPath'), null, true);
 
-            $request = new Request();
-            $response = $client->send($request);
-            $body = $response->getContent();
-
-            file_put_contents("temp.tar",$body);
-            $phar = new \PharData('temp.tar');
-            $phar->extractTo($config->destPath, null, true);
-        }
-        catch (Zend_Http_Client_Adapter_Exception $e) {
-            var_dump($e->getMessage());
-        }
-        catch (Exception $e) {
+            $lastDir = getcwd();
+            chdir($config->get('destPath').$config->get('applicationName'));
+            shell_exec('phing');
+            chdir($lastDir);
+        } catch (\Exception $e) {
             var_dump($e->getMessage());
         }
         return new ViewModel(array());
