@@ -2,6 +2,10 @@
 
 namespace Agent\Controller;
 
+use Agent\Deploy\Adapter\Tarball;
+use SebastianBergmann\Exporter\Exception;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
@@ -18,52 +22,34 @@ class AgentController extends AbstractActionController
     {
         $settings = $this->getServiceLocator()->get('config');
         $config = new Config($settings['deployAgent']);
+        $logger = new Logger();
+        FileSystem::mkdirp($config->destPath, 0777, true);
+        $writer = new Stream($config->destPath . 'deployment.log');
+        $logger->addWriter($writer);
+        $logger->info('######## START DEPLOYMENT ########');
         try {
-            $dir = '/tmp/deploy-agent/';
-            $gzFileName = 'tarball.tar.gz';
-            $tarFileName = 'tarball.tar';
-            $tarball = $dir . $gzFileName ;
+            $logger->info('Downloading archive');
+            $tarball = new Tarball($config->packageUrl, $config->destPath);
+            $logger->info('Downloading archive [done]');
 
-            $client = new Client($config->packageUrl, array(
-                'sslverifypeer' => null,
-//                'outputstream'    => true,
-                'sslallowselfsigned' => null,
-            ));
-            $client->setStream();
-            $response = $client->send();
+            $logger->info('Decompression');
+            $tarball->decompress();
+            $logger->info('Decompression [done]');
 
-            // copy stream
-            FileSystem::mkdirp($dir, 0777, true);
-            copy($response->getStreamName(), $tarball);
-            $fp = fopen($tarball, 'w');
-            stream_copy_to_stream($response->getStream(), $fp);
-            FileSystem::mkdirp($config->destPath, 0777, true);
-
-
-            /** Doc from http://unofficial-zf2.readthedocs.org/en/latest/modules/zend.filter.compress.html */
-            $options = array(
-                'adapter' => 'Gz',
-                'options' => array(
-                    'target' => $config->destPath,
-                )
-            );
-            $filter = new Decompress($options);
-            $decompressed = $filter->filter($tarball);
-            $tar = $dir . $tarFileName;
-            file_put_contents($tar, $decompressed);
-//            var_dump($decompressed);
-
-            $options['adapter'] = 'Tar';
-            $filter = new Decompress($options);
-            $filter->setArchive($tar);
-            if (is_file($tar))
-                $decompressed = $filter->filter($tar);
-            var_dump($decompressed);
-
-        }
-        catch (Exception $e) {
+            $logger->info('Extraction');
+            $tarball->extract();
+            $logger->info('Extraction [done]');
+        } catch (Exception $e) {
             var_dump($e->getMessage());
+            $logger->err("An error has occurs during the deployment.");
+            $logger->err("Details:" . $e->getMessage());
         }
+
+        $logger->info('Delete temporary files');
+        if (!is_null($tarball))
+            $tarball->cleanTemporaryFile();
+        $logger->info('Delete temporary files [done]');
+
         return new ViewModel(array());
     }
 }
