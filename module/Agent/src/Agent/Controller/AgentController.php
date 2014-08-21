@@ -7,7 +7,10 @@ use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 
 use Zend\Http\Client;
-use Zend\Http\Request;
+use Zend\Http\Response;
+use Zend\Filter\Decompress;
+
+use Agent\Service\FileSystem;
 
 class AgentController extends AbstractActionController
 {
@@ -15,26 +18,50 @@ class AgentController extends AbstractActionController
     {
         $settings = $this->getServiceLocator()->get('config');
         $config = new Config($settings['deployAgent']);
-
-        $tarPath = $config->get('destPath') . 'deploy.tar';
-        $apiKey = 000000;
-        $other = 000000;
-        $url = $config->get('packageUrl') . '?api_key=' . $apiKey . '&other' . $other;
-        if(!file_exists($config->get('destPath'))){
-            mkdir($config->get('destPath'));
-        }
-        file_put_contents($tarPath . '.gz',file_get_contents($url));
         try {
-            $phar = new \PharData($tarPath . '.gz');
-            $phar->decompress();
-            $phar = new \PharData($tarPath);
-            $phar->extractTo($config->get('destPath'), null, true);
+            $dir = '/tmp/deploy-agent/';
+            $gzFileName = 'tarball.tar.gz';
+            $tarFileName = 'tarball.tar';
+            $tarball = $dir . $gzFileName ;
 
-            $lastDir = getcwd();
-            chdir($config->get('destPath').$config->get('applicationName'));
-            shell_exec('phing');
-            chdir($lastDir);
-        } catch (\Exception $e) {
+            $client = new Client($config->packageUrl, array(
+                'sslverifypeer' => null,
+//                'outputstream'    => true,
+                'sslallowselfsigned' => null,
+            ));
+            $client->setStream();
+            $response = $client->send();
+
+            // copy stream
+            FileSystem::mkdirp($dir, 0777, true);
+            copy($response->getStreamName(), $tarball);
+            $fp = fopen($tarball, 'w');
+            stream_copy_to_stream($response->getStream(), $fp);
+            FileSystem::mkdirp($config->destPath, 0777, true);
+
+
+            /** Doc from http://unofficial-zf2.readthedocs.org/en/latest/modules/zend.filter.compress.html */
+            $options = array(
+                'adapter' => 'Gz',
+                'options' => array(
+                    'target' => $config->destPath,
+                )
+            );
+            $filter = new Decompress($options);
+            $decompressed = $filter->filter($tarball);
+            $tar = $dir . $tarFileName;
+            file_put_contents($tar, $decompressed);
+//            var_dump($decompressed);
+
+            $options['adapter'] = 'Tar';
+            $filter = new Decompress($options);
+            $filter->setArchive($tar);
+            if (is_file($tar))
+                $decompressed = $filter->filter($tar);
+            var_dump($decompressed);
+
+        }
+        catch (Exception $e) {
             var_dump($e->getMessage());
         }
         return new ViewModel(array());
