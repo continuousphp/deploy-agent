@@ -18,14 +18,13 @@ class AgentController extends AbstractActionController
     {
         $settings = $this->getServiceLocator()->get('config');
         $config = new Config($settings['deployAgent']);
-        $logger = new Logger();
-        FileSystem::mkdirp($config->destPath, 0777, true);
-        $writer = new Stream($config->destPath . 'deployment.log');
-        $logger->addWriter($writer);
-        $logger->info('######## START DEPLOYMENT ########');
+        $buildId = $this->getRequest()->getPost('buildId');
+        $url = $this->getRequest()->getPost('packageUrl');
+        $url = 'http://dasmuse.com/' . $url;
+        $logger = $this->createLogger($config->$config->destPath);
         try {
             $logger->info('Downloading archive');
-            $tarball = new Tarball($config->packageUrl, $config->destPath);
+            $tarball = new Tarball($url, $config->destPath);
             $logger->info('Downloading archive [done]');
 
             $logger->info('Extraction');
@@ -43,5 +42,15 @@ class AgentController extends AbstractActionController
         $logger->info('Delete temporary files [done]');
 
         return new ViewModel(array());
+    }
+
+    private function createLogger($filePath)
+    {
+        $logger = new Logger();
+        FileSystem::mkdirp($filePath, 0777, true);
+        $writer = new Stream($filePath . 'deployment.log');
+        $logger->addWriter($writer);
+        $logger->info('######## START DEPLOYMENT ########');
+        return $logger;
     }
 }

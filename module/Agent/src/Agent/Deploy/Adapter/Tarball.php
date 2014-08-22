@@ -27,22 +27,27 @@ class Tarball
 
     private function downloadArchive($tarUrl, $dlDest)
     {
+        $stream = $this->streamFromUrl($tarUrl);
+        $this->createFromResponseStream($stream,$dlDest);
+    }
+
+    function streamFromUrl($tarUrl)
+    {
         $client = new Client($tarUrl, array(
             'sslverifypeer' => null,
             'sslallowselfsigned' => null,
         ));
         $client->setStream();
-        $response = $client->send();
+        return $client->send();
+    }
 
-        if (!$response instanceof Zend_Http_Response_Stream) {
-            //TODO manage download stream error
-        }
-        // copy stream
-        FileSystem::mkdirp($dlDest, 0777, true);
-        $tarball = $dlDest . $this->gzFileName;
-        copy($response->getStreamName(), $tarball);
+    function createFromResponseStream(Zend_Http_Response_Stream $stream,$fileFolder)
+    {
+        FileSystem::mkdirp($fileFolder, 0777, true);
+        $tarball = $fileFolder . $this->gzFileName;
+        copy($stream->getStreamName(), $tarball);
         $fp = fopen($tarball, 'w');
-        stream_copy_to_stream($response->getStream(), $fp);
+        stream_copy_to_stream($stream->getStream(), $fp);
         fclose($fp);
     }
 
