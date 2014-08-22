@@ -20,7 +20,6 @@ class AgentController extends AbstractActionController
         $config = new Config($settings['deployAgent']);
         $buildId = $this->getRequest()->getPost('buildId');
         $url = $this->getRequest()->getPost('packageUrl');
-        $url = 'http://dasmuse.com/' . $url;
         $logger = $this->createLogger($config->destPath);
         try {
             $logger->info('Downloading archive');
