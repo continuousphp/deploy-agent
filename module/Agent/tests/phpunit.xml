@@ -2,8 +2,19 @@
 
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
-        <testsuite name="ContinuousPhp_DeployAgent">
+        <testsuite name="DeployAgent">
             <directory>./AgentTest</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <ini name="date.timezone" value="Europe/Brussels" />
+    </php>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src</directory>
+            <exclude>
+                <directory suffix=".php">../src/Agent/Controller</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
