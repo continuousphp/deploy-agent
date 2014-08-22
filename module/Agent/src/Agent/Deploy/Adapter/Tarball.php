@@ -35,7 +35,7 @@ class Tarball
         $response = $client->send();
 
         if (!$response instanceof Zend_Http_Response_Stream) {
-
+            //TODO manage download stream error
         }
         // copy stream
         FileSystem::mkdirp($dlDest, 0777, true);
@@ -46,51 +46,22 @@ class Tarball
         fclose($fp);
     }
 
-    function decompress()
-    {
-        $tarball = $this->folder . $this->gzFileName;
-        if (is_file($tarball)) {
-            /** Doc from http://unofficial-zf2.readthedocs.org/en/latest/modules/zend.filter.compress.html */
-            $options = array(
-                'adapter' => 'Gz',
-                'options' => array(
-                    'target' => $this->folder,
-                )
-            );
-            $filter = new Decompress($options);
-            $decompressed = $filter->filter($tarball);
-            $tar = $this->folder . $this->tarFileName;
-            file_put_contents($tar, $decompressed);
-        }
-    }
-
     function extract($destPath = null)
     {
         if (is_null($destPath))
             $destPath = $this->folder;
-        else
-            FileSystem::mkdirp($destPath, 0777, true);
-        $tar = $this->folder . $this->tarFileName;
-        if (is_file($tar)) {
-            $options = array(
-                'adapter' => 'Tar',
-                'options' => array(
-                    'target' => $destPath,
-                )
-            );
-            $filter = new Decompress($options);
-            $filter->setArchive($tar);
-            if (is_file($tar))
-                $decompressed = $filter->filter($tar);
+        $tarball = $this->folder . $this->gzFileName;
+        if (is_file($tarball)) {
+            $tar = new \Archive_Tar($tarball, true);
+            return $tar->extract($destPath);
         }
     }
 
     function cleanTemporaryFile()
     {
-        $tar = $this->folder . $this->tarFileName;
-        unlink($tar);
         $tarball = $this->folder . $this->gzFileName;
-        unlink($tarball);
+        if (is_file($tarball))
+            unlink($tarball);
     }
 
     public function getTarFileName()

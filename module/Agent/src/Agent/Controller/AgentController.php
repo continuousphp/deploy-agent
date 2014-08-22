@@ -9,11 +9,7 @@ use Zend\Log\Writer\Stream;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
-
-use Zend\Http\Client;
 use Zend\Http\Response;
-use Zend\Filter\Decompress;
-
 use Agent\Service\FileSystem;
 
 class AgentController extends AbstractActionController
@@ -31,10 +27,6 @@ class AgentController extends AbstractActionController
             $logger->info('Downloading archive');
             $tarball = new Tarball($config->packageUrl, $config->destPath);
             $logger->info('Downloading archive [done]');
-
-            $logger->info('Decompression');
-            $tarball->decompress();
-            $logger->info('Decompression [done]');
 
             $logger->info('Extraction');
             $tarball->extract();

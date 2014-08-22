@@ -21,11 +21,7 @@ return array(
             'agent' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/agent[/:action][/:id][/]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ),
+                    'route'    => '/agent[/:action]',
                     'defaults' => array(
                         'controller' => 'Agent\Controller\Agent',
                         'action'     => 'index',
