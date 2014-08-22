@@ -1,37 +1,59 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Simon
- * Date: 21/08/14
- * Time: 14:17
+ * Continuous Php (http://continuousphp.com/)
+ *
+ * @author Simon Olbregts
+ * @link      http://github.com/continuousphp/deploy-agent for the canonical source repository
+ * @copyright Copyright (c) 2014 Continuous Php (http://continuousphp.com/)
+ * @license   New BSD License
+ *
  */
 
 namespace Agent\Deploy\Adapter;
 
-
 use Agent\Service\FileSystem;
-use Zend\Filter\Decompress;
 use Zend\Http\Client;
 
 class Tarball
 {
+    /** @var string folder */
     private $folder;
+    /** @var string Gz filename */
     private $gzFileName = 'tarball.tar.gz';
+    /** @var string Tar filename */
     private $tarFileName = 'tarball.tar';
 
-    function __construct($tarUrl, $dest)
+    /**
+     * Constructor
+     *
+     * @param $tarUrl
+     * @param $destination
+     */
+    function __construct($tarUrl, $destination)
     {
-        $this->folder = $dest;
-        $this->downloadArchive($tarUrl, $dest);
+        $this->folder = $destination;
+        $this->downloadArchive($tarUrl);
     }
 
-    private function downloadArchive($tarUrl, $dlDest)
+    /**
+     * Download and decompress tar archive
+     *
+     * @param $tarUrl
+     */
+    private function downloadArchive($tarUrl)
     {
         $stream = $this->streamFromUrl($tarUrl);
-        $this->createFromResponseStream($stream,$dlDest);
+        if ($stream instanceof \Zend\Http\Response\Stream)
+            $this->createFromResponseStream($stream, $this->getFolder());
     }
 
-    function streamFromUrl($tarUrl)
+    /**
+     * Get tarball
+     *
+     * @param $tarUrl
+     * @return \Zend\Http\Response
+     */
+    public function streamFromUrl($tarUrl)
     {
         $client = new Client($tarUrl, array(
             'sslverifypeer' => null,
@@ -41,43 +63,97 @@ class Tarball
         return $client->send();
     }
 
-    function createFromResponseStream(Zend_Http_Response_Stream $stream,$fileFolder)
+    /**
+     * Copy a stream in destination folder
+     *
+     * @param \Zend\Http\Response\Stream $stream
+     * @param $folder
+     */
+    public function createFromResponseStream(\Zend\Http\Response\Stream $stream, $folder)
     {
-        FileSystem::mkdirp($fileFolder, 0777, true);
-        $tarball = $fileFolder . $this->gzFileName;
+        FileSystem::mkdirp($folder, 0777, true);
+        $tarball = $folder . $this->getGzFileName();
         copy($stream->getStreamName(), $tarball);
         $fp = fopen($tarball, 'w');
         stream_copy_to_stream($stream->getStream(), $fp);
         fclose($fp);
     }
 
-    function extract($destPath = null)
+    /**
+     * Extract tarball in destination path
+     *
+     * @param null $destinationPath
+     * @return bool
+     */
+    public function extract($destinationPath = null)
     {
-        if (is_null($destPath))
-            $destPath = $this->folder;
-        $tarball = $this->folder . $this->gzFileName;
+        if (is_null($destinationPath))
+            $destinationPath = $this->getFolder();
+
+        $tarball = $this->getFolder() . $this->getGzFileName();
         if (is_file($tarball)) {
-            $tar = new \Archive_Tar($tarball, true);
-            return $tar->extract($destPath);
+            $tar = new \Archive_Tar($tarball);
+            return $tar->extract($destinationPath, true);
         }
+        return false;
     }
 
-    function cleanTemporaryFile()
+    /**
+     * Clean temporary tar and gzip files
+     */
+    public function cleanTemporaryFile()
     {
-        $tarball = $this->folder . $this->gzFileName;
+        $tarball = $this->getFolder() . $this->getGzFileName();
         if (is_file($tarball))
             unlink($tarball);
     }
 
-    public function getTarFileName()
+    /**
+     * @param string $folder
+     */
+    public function setFolder($folder)
     {
-        return $this->tarFileName;
+        $this->folder = $folder;
     }
 
+    /**
+     * @return string
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
+
+    /**
+     * @param string $gzFileName
+     */
+    public function setGzFileName($gzFileName)
+    {
+        $this->gzFileName = $gzFileName;
+    }
+
+    /**
+     * @return string
+     */
     public function getGzFileName()
     {
         return $this->gzFileName;
     }
 
+    /**
+     * @param string $tarFileName
+     */
+    public function setTarFileName($tarFileName)
+    {
+        $this->tarFileName = $tarFileName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTarFileName()
+    {
+        return $this->tarFileName;
+    }
 
 } 

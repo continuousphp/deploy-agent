@@ -9,7 +9,7 @@
 //'packageUrl' =>'http://dasmuse.com/deploy-agent.tar.gz',
 return array(
     'deployAgent' => array(
-        'destPath'=> '/deploy-agent/',
+        'destPath'=> '/tmp/deploy-agent/',
         'applicationName' => 'MyContinuousProject',
     )
 );

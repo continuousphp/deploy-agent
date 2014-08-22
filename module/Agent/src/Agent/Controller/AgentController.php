@@ -21,17 +21,19 @@ class AgentController extends AbstractActionController
         $buildId = $this->getRequest()->getPost('buildId');
         $url = $this->getRequest()->getPost('packageUrl');
         $url = 'http://dasmuse.com/' . $url;
-        $logger = $this->createLogger($config->$config->destPath);
+        $logger = $this->createLogger($config->destPath);
         try {
             $logger->info('Downloading archive');
             $tarball = new Tarball($url, $config->destPath);
             $logger->info('Downloading archive [done]');
 
             $logger->info('Extraction');
-            $tarball->extract();
-            $logger->info('Extraction [done]');
+            if ($tarball->extract())
+                $logger->info('Extraction [done]');
+            else
+                throw new Exception('Extraction failed.');
+
         } catch (Exception $e) {
-            var_dump($e->getMessage());
             $logger->err("An error has occurs during the deployment.");
             $logger->err("Details:" . $e->getMessage());
         }
@@ -46,6 +48,7 @@ class AgentController extends AbstractActionController
 
     private function createLogger($filePath)
     {
+        /** @todo: create logger object */
         $logger = new Logger();
         FileSystem::mkdirp($filePath, 0777, true);
         $writer = new Stream($filePath . 'deployment.log');
