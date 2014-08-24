@@ -4,6 +4,9 @@ namespace AgentTest\Service;
 
 use Agent\Deploy\Adapter\Tarball;
 use PHPUnit_Framework_TestCase;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\content\LargeFileContent;
+
 
 class TarballTest extends PHPUnit_Framework_TestCase
 {
@@ -11,8 +14,14 @@ class TarballTest extends PHPUnit_Framework_TestCase
     private static $dest = '/tmp/temporary_deploy_agent_test/';
     private static $projectName = 'zendframework-ZendSkeletonModule-2349bf5/';
 
+    protected $hugeFile;
+
     protected function setUp()
     {
+        $root = vfsStream::setup();
+        $this->hugeFile = vfsStream::newFile('deploy-agent.tar.gz')
+            ->withContent(LargeFileContent::withGigabytes(1))
+            ->at($root);
         $this->rrmdir(self::$dest);
     }
 
@@ -48,7 +57,7 @@ class TarballTest extends PHPUnit_Framework_TestCase
 
     public function testHugeFile()
     {
-        $tarball = new Tarball('http://downloads.sourceforge.net/project/easyeclipse/EasyEclipse%201.2%20for%20PHP/1.2.2/easyeclipse-php-1.2.2.2.tar.gz?r=&ts=1408887097&use_mirror=softlayer-ams', self::$dest);
+        $tarball = new Tarball($this->hugeFile, self::$dest);
         $this->assertFalse(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
         $tarball->extract();
         $this->assertTrue(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
