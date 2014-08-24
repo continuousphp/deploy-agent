@@ -2,7 +2,6 @@
 
 namespace Agent\Controller;
 
-use Agent\Deploy\Adapter\Tarball;
 use SebastianBergmann\Exporter\Exception;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
@@ -10,14 +9,29 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 use Zend\Http\Response;
+
+use Agent\ConfigAwareInterface;
+use Agent\Deploy\Adapter\Tarball;
 use Agent\Service\FileSystem;
 
-class AgentController extends AbstractActionController
+
+class AgentController extends AbstractActionController implements ConfigAwareInterface
 {
+    protected $config;
+
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function indexAction()
     {
-        $settings = $this->getServiceLocator()->get('config');
-        $config = new Config($settings['deployAgent']);
+        $config = new Config($this->getConfig());
         $buildId = $this->getRequest()->getPost('buildId');
         $url = $this->getRequest()->getPost('packageUrl');
         $logger = $this->createLogger($config->destPath);
@@ -28,7 +42,7 @@ class AgentController extends AbstractActionController
 
             $logger->info('Extraction');
             if ($tarball->extract())
-                $logger->info('Extraction [done]');
+                $logger->info('Extraction [done]'); /**/
             else
                 throw new Exception('Extraction failed.');
 

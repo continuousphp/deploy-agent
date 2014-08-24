@@ -16,9 +16,24 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+    }
+
+    public function getControllerConfig()
+    {
+        return array(
+            'initializers' => array(
+                function ($instance, $sm) {
+                    if ($instance instanceof ConfigAwareInterface) {
+                        $config = $sm->getServiceLocator()->get('Config');
+                        $config = isset($config['deployAgent']) ? $config['deployAgent'] : array();
+                        $instance->setConfig($config);
+                    }
+                }
+            )
+        );
     }
 
     public function getConfig()
