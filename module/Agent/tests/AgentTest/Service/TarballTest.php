@@ -8,7 +8,7 @@ use PHPUnit_Framework_TestCase;
 class TarballTest extends PHPUnit_Framework_TestCase
 {
     private static $tarUrl = 'http://github.com/zendframework/ZendSkeletonModule/tarball/master';
-    private static $dest = '/temporary_deploy_agent_test/';
+    private static $dest = '/tmp/temporary_deploy_agent_test/';
     private static $projectName = 'zendframework-ZendSkeletonModule-2349bf5/';
 
     protected function setUp()
@@ -20,7 +20,6 @@ class TarballTest extends PHPUnit_Framework_TestCase
     {
         $this->rrmdir(self::$dest);
     }
-
 
     public function testDownloadTar()
     {
@@ -49,11 +48,10 @@ class TarballTest extends PHPUnit_Framework_TestCase
 
     public function testHugeFile()
     {
-        $tarball = new Tarball('http://dasmuse.com/PhpStorm.tar.gz', self::$dest);
-        $this->assertFalse(file_exists(self::$dest . 'PhpStorm-133.679'));
+        $tarball = new Tarball('http://downloads.sourceforge.net/project/easyeclipse/EasyEclipse%201.2%20for%20PHP/1.2.2/easyeclipse-php-1.2.2.2.tar.gz?r=&ts=1408887097&use_mirror=softlayer-ams', self::$dest);
+        $this->assertFalse(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
         $tarball->extract();
-        $this->assertTrue(file_exists(self::$dest . 'PhpStorm-133.679'));
-
+        $this->assertTrue(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
     }
 
     private function rrmdir($dir)
