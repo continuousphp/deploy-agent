@@ -8,6 +8,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\content\LargeFileContent;
 
 
+
 class TarballTest extends PHPUnit_Framework_TestCase
 {
     private static $tarUrl = 'http://github.com/zendframework/ZendSkeletonModule/tarball/master';
@@ -57,7 +58,23 @@ class TarballTest extends PHPUnit_Framework_TestCase
 
     public function testHugeFile()
     {
-        $tarball = new Tarball($this->hugeFile, self::$dest);
+        $mockResponse = $this->getMock('Zend\Http\Response');
+        $mockResponse->expects($this->any())
+            ->method('getContent')
+            ->will($this->returnValue($this->hugeFile));
+
+        $mockClient = $this->getMock('Zend\Http\Client');
+        $mockClient->expects($this->any())
+            ->method('send')
+            ->will($this->returnValue($mockResponse));
+
+        $client = $mockClient;
+        $client->setUri('http://continuousphp.com');
+        $client->setStream();
+        $response = $client->send();
+
+        $tarball = new Tarball(self::$tarUrl, self::$dest);
+        $tarball->createFromResponseStream($response, self::$dest);
         $this->assertFalse(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
         $tarball->extract();
         $this->assertTrue(file_exists(self::$dest . 'easyeclipse-php-1.2.2.2'));
