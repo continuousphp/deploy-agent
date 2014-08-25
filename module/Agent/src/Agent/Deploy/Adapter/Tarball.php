@@ -26,21 +26,19 @@ class Tarball
     /**
      * Constructor
      *
-     * @param $tarUrl
      * @param $destination
      */
-    function __construct($tarUrl, $destination)
+    function __construct($destination)
     {
         $this->folder = $destination;
-        $this->downloadArchive($tarUrl);
     }
 
     /**
-     * Download and decompress tar archive
+     * Download and save tar archive
      *
      * @param $tarUrl
      */
-    private function downloadArchive($tarUrl)
+    public function downloadArchive($tarUrl)
     {
         $stream = $this->streamFromUrl($tarUrl);
         if ($stream instanceof \Zend\Http\Response\Stream)
@@ -48,7 +46,7 @@ class Tarball
     }
 
     /**
-     * Get tarball
+     * Get stream from http url tarball
      *
      * @param $tarUrl
      * @return \Zend\Http\Response
@@ -67,12 +65,11 @@ class Tarball
      * Copy a stream in destination folder
      *
      * @param \Zend\Http\Response\Stream $stream
-     * @param $folder
      */
-    public function createFromResponseStream(\Zend\Http\Response\Stream $stream, $folder)
+    public function createFromResponseStream(\Zend\Http\Response\Stream $stream)
     {
-        FileSystem::mkdirp($folder, 0777, true);
-        $tarball = $folder . $this->getGzFileName();
+        FileSystem::mkdirp($this->folder, 0777, true);
+        $tarball = $this->folder . $this->getGzFileName();
         copy($stream->getStreamName(), $tarball);
         $fp = fopen($tarball, 'w');
         stream_copy_to_stream($stream->getStream(), $fp);
