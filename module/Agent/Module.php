@@ -9,6 +9,10 @@
 
 namespace Agent;
 
+use Agent\Model\Deployment;
+use Agent\Model\DeploymentTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
@@ -33,6 +37,25 @@ class Module
                     }
                 }
             )
+        );
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Agent\Model\DeploymentTable' => function ($sm) {
+                        $tableGateway = $sm->get('DeploymentTableGateway');
+                        $table = new DeploymentTable($tableGateway);
+                        return $table;
+                    },
+                'DeploymentTableGateway' => function ($sm) {
+                        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                        $resultSetPrototype = new ResultSet();
+                        $resultSetPrototype->setArrayObjectPrototype(new Deployment());
+                        return new TableGateway('deployment', $dbAdapter, null, $resultSetPrototype);
+                    },
+            ),
         );
     }
 
