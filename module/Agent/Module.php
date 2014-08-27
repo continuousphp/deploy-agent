@@ -16,7 +16,10 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
-class Module
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
+
+class Module implements ConfigProviderInterface, ServiceProviderInterface
 {
     public function onBootstrap(MvcEvent $e)
     {
@@ -43,6 +46,9 @@ class Module
     public function getServiceConfig()
     {
         return array(
+            'invokables' => array(
+                'agent_deploymanager_service' => 'Agent\Service\DeployManager',
+            ),
             'factories' => array(
                 'Agent\Model\DeploymentTable' => function ($sm) {
                         $tableGateway = $sm->get('DeploymentTableGateway');

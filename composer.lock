@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f47907b46478002fb1a7c307cc3311c",
+    "hash": "b23b239427e02bfe038eaaf13e3832bd",
     "packages": [
         {
             "name": "pear/archive_tar",
@@ -324,6 +324,59 @@
                 "zf2"
             ],
             "time": "2013-03-05 13:27:39"
+        },
+        {
+            "name": "zf-commons/zfc-base",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ZF-Commons/ZfcBase.git",
+                "reference": "2d0e9013eaa4e59f5bec08444122a0f6c1c33107"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZF-Commons/ZfcBase/zipball/2d0e9013eaa4e59f5bec08444122a0f6c1c33107",
+                "reference": "2d0e9013eaa4e59f5bec08444122a0f6c1c33107",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-db": "~2.1",
+                "zendframework/zend-eventmanager": "~2.1",
+                "zendframework/zend-loader": "~2.1",
+                "zendframework/zend-modulemanager": "~2.1",
+                "zendframework/zend-mvc": "~2.1",
+                "zendframework/zend-servicemanager": "~2.1",
+                "zendframework/zend-stdlib": "~2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ZfcBase": "src/"
+                },
+                "classmap": [
+                    "./Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Kyle Spraggs",
+                    "email": "theman@spiffyjr.me",
+                    "homepage": "http://www.spiffyjr.me/"
+                },
+                {
+                    "name": "Evan Coury",
+                    "email": "me@evancoury.com",
+                    "homepage": "http://blog.evan.pro/"
+                }
+            ],
+            "description": "A set of genetic (abstract) classes which are commonly used across multiple modules.",
+            "homepage": "https://github.com/ZF-Commons/ZfcBase",
+            "keywords": [
+                "zf2"
+            ],
+            "time": "2014-01-19 14:45:43"
         }
     ],
     "packages-dev": [
@@ -1063,6 +1116,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "zf-commons/zfc-base": 20,
         "mikey179/vfsstream": 20
     },
     "prefer-stable": false,

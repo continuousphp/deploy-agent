@@ -10,7 +10,7 @@
 return array(
     'deployAgent' => array(
         'projectPath'=> '/tmp/deploy-agent/',
-        'buildPath' => '/deploy_agent_build/',
+        'buildPath' => '/tmp/deploy_agent_build/',
         'applicationName' => 'MyContinuousProject',
     )
 );
