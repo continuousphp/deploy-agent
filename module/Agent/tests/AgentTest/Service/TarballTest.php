@@ -10,7 +10,7 @@ use org\bovigo\vfs\content\LargeFileContent;
 
 class TarballTest extends PHPUnit_Framework_TestCase
 {
-        private static $tarUrl ='http://github.com/zendframework/ZendSkeletonModule/tarball/master';// 'http://dasmuse.com/deploy-agent.tar.gz';
+    private static $tarUrl = 'http://github.com/zendframework/ZendSkeletonModule/tarball/master'; // 'http://dasmuse.com/deploy-agent.tar.gz';
     private static $dest = '/tmp/temporary_deploy_agent_test/';
     private static $projectName = 'zendframework-ZendSkeletonModule-2349bf5/';
 
@@ -23,12 +23,7 @@ class TarballTest extends PHPUnit_Framework_TestCase
         $this->hugeFile = vfsStream::newFile('deploy-agent.tar.gz')
             ->withContent(LargeFileContent::withGigabytes(1))
             ->at($this->root);
-//        $this->rrmdir(self::$dest);
-    }
-
-    protected function tearDown()
-    {
-//        $this->rrmdir(self::$dest);
+        vfsStream::copyFromFileSystem('/tmp/testing_file/');
     }
 
     public function testDownloadTar()
@@ -39,17 +34,18 @@ class TarballTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->root->hasChild('tarball.tar.gz'));
     }
 
-    public function testExtract()
-    {
-        $tarball = new Tarball(vfsStream::url('deploy-agent/'));
-        $tarball->downloadArchive(self::$tarUrl);
-        $this->assertFalse($this->root->hasChild(self::$projectName));
-        $tarball->extract();
-        foreach($this->root->getChildren() as $key => $file){
-            var_dump($file->getName());
-        }
-        $this->assertTrue($this->root->hasChild(self::$projectName));
-    }
+//    public function testExtract()
+//    {
+//        $tarball = new Tarball(vfsStream::url('deploy-agent/'));
+//        $tarball->downloadArchive(self::$tarUrl);
+//        $this->assertFalse($this->root->hasChild(self::$projectName));
+//        $tarball->setGzFileName('testingfile.tar.gz');
+//        $tarball->extract();
+//        foreach ($this->root->getChildren() as $key => $file) {
+//            var_dump($file->getName());
+//        }
+//        $this->assertTrue($this->root->hasChild(self::$projectName));
+//    }
 //
 //    public function testExtractElseWhere()
 //    {

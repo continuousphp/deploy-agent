@@ -28,4 +28,18 @@ class ApiKeyManagerTest extends PHPUnit_Framework_TestCase
         $hash = $keyManager->getHash();
         $this->assertTrue($keyManager->verify($hash));
     }
+
+    public function testVerifyNotCorrect()
+    {
+        $keyManager = new ApiKeyManager($this->apikey);
+        $hash = $keyManager->getHash();
+        $last = substr($hash,-1);
+        if($last != 'a'){
+            $last = 'a';
+        }else{
+            $last = 'b';
+        }
+        $newHash = substr($hash,0,-1).$last;
+        $this->assertFalse($keyManager->verify($newHash));
+    }
 }

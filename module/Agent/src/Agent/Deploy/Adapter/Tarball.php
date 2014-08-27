@@ -11,6 +11,7 @@
 
 namespace Agent\Deploy\Adapter;
 
+use Agent\Service\AgentLogger;
 use Agent\Service\FileSystem;
 use Zend\Http\Client;
 
@@ -53,12 +54,15 @@ class Tarball
      */
     public function streamFromUrl($tarUrl)
     {
+        AgentLogger::info('Connect to continuous php server');
         $client = new Client($tarUrl, array(
             'sslverifypeer' => null,
             'sslallowselfsigned' => null,
         ));
         $client->setStream();
-        return $client->send();
+        $stream = $client->send();
+        AgentLogger::info('Connect to continuous php server [done]');
+        return $stream;
     }
 
     /**
@@ -68,12 +72,14 @@ class Tarball
      */
     public function createFromResponseStream(\Zend\Http\Response\Stream $stream)
     {
+        AgentLogger::info('Downloading tarball');
         FileSystem::mkdirp($this->folder, 0777, true);
         $tarball = $this->folder . $this->getGzFileName();
         copy($stream->getStreamName(), $tarball);
         $fp = fopen($tarball, 'w');
         stream_copy_to_stream($stream->getStream(), $fp);
         fclose($fp);
+        AgentLogger::info('Downloading tarball [done]');
     }
 
     /**
@@ -84,15 +90,20 @@ class Tarball
      */
     public function extract($destinationPath = null)
     {
+        AgentLogger::info('Extraction');
         if (is_null($destinationPath))
             $destinationPath = $this->getFolder();
 
         $tarball = $this->getFolder() . $this->getGzFileName();
+        $done = false;
         if (is_file($tarball)) {
             $tar = new \Archive_Tar($tarball);
-            return $tar->extract($destinationPath, true);
+            $done = $tar->extract($destinationPath, true);
+            AgentLogger::info('Extraction [done]');
+        }else{
+            AgentLogger::error($tarball.' is not a path to the file');
         }
-        return false;
+        return $done;
     }
 
     /**
@@ -100,9 +111,11 @@ class Tarball
      */
     public function cleanTemporaryFile()
     {
+        AgentLogger::info('Delete temporary files');
         $tarball = $this->getFolder() . $this->getGzFileName();
         if (is_file($tarball))
             unlink($tarball);
+        AgentLogger::info('Delete temporary files [done]');
     }
 
     /**

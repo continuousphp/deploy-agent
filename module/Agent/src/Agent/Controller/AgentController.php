@@ -2,7 +2,9 @@
 
 namespace Agent\Controller;
 
+use Agent\Deploy\Adapter\Phing;
 use Agent\Model\Deployment;
+use Agent\Service\AgentLogger;
 use Agent\Service\ApiKeyManager;
 use SebastianBergmann\Exporter\Exception;
 use Zend\Log\Logger;
@@ -36,46 +38,44 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
     public function indexAction()
     {
         $config = new Config($this->getConfig());
-        $buildId = $this->getRequest()->getPost('buildId');
-        $url = $this->getRequest()->getPost('packageUrl');
+        $buildId = $this->getRequest()->getPost('build_id');
+        $url = $this->getRequest()->getPost('package_url');
         $keyManager = new ApiKeyManager($buildId);
         $url = $url . '?apikey=' . $keyManager->getHash();
-        $logger = $this->createLogger($config->buildPath);
+        AgentLogger::initLogger($config->buildPath);
         $buildFolder = $config->buildPath . 'build_'.$buildId.'/';
         try {
-            $logger->info('Downloading archive');
             $tarball = new Tarball($buildFolder);
             $stream = $tarball->streamFromUrl($url);
             if ($this->vadidateHash($keyManager, $stream)) {
                 $tarball->createFromResponseStream($stream);
-                $logger->info('Downloading archive [done]');
 
-                $logger->info('Extraction');
-                if ($tarball->extract())
-                    $logger->info('Extraction [done]'); /**/
-                else
+                if (! $tarball->extract())
                     throw new Exception('Extraction failed.');
-
-                $logger->info('Delete temporary files');
                 $tarball->cleanTemporaryFile();
-                $logger->info('Delete temporary files [done]');
-
-                $logger->info('Push new build');
-                $deploymentTable = $this->getDeploymentTable();
-                $deploy = new Deployment();
-                $deploy->init($buildId,$buildFolder);
-                $deploymentTable->saveDeployment($deploy);
-                FileSystem::rrmdir($config->projectPath . $config->applicationName);
-                FileSystem::xcopy($buildFolder,$config->projectPath);
-                $logger->info('Push new build [done]');
+                $projectFolder =$config->projectPath . $config->applicationName;
+                $this->pushNewBuild($buildId,$buildFolder,$projectFolder);
+                Phing::Execute($projectFolder);
             } else {
-                $logger->err("Invalid api key. Deployment aborted");
+                AgentLogger::error("Invalid api key. Deployment aborted");
             }
         } catch (Exception $e) {
-            $logger->err("An error has occurs during the deployment.");
-            $logger->err("Details:" . $e->getMessage());
+            AgentLogger::error("An error has occurs during the deployment.");
+            AgentLogger::error("  Details:" . $e->getMessage());
         }
         return new ViewModel(array());
+    }
+
+    private function pushNewBuild($buildId,$buildFolder,$projectFolder)
+    {
+        AgentLogger::info('Push new build');
+        $deploymentTable = $this->getDeploymentTable();
+        $deploy = new Deployment();
+        $deploy->init($buildId,$buildFolder);
+        $deploymentTable->saveDeployment($deploy);
+        FileSystem::rrmdir($projectFolder);
+        FileSystem::xcopy($buildFolder,$config->projectPath);
+        AgentLogger::info('Push new build [done]');
     }
 
     private function vadidateHash($keyManager, $response)
@@ -84,17 +84,6 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
         /* Waiting for continuous php validation
         $returnedHash = $response->getHeaders()->get('apiKey');
         return $keyManager->verify($returnedHash);*/
-    }
-
-    private function createLogger($filePath)
-    {
-        /** @todo: create logger object */
-        $logger = new Logger();
-        FileSystem::mkdirp($filePath, 0777, true);
-        $writer = new Stream($filePath . 'deployment.log');
-        $logger->addWriter($writer);
-        $logger->info('######## START DEPLOYMENT ########');
-        return $logger;
     }
 
     private function getDeploymentTable()
