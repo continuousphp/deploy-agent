@@ -25,9 +25,9 @@ class Deployment
 
     public function exchangeArray($data)
     {
-        $this->$id = (!empty($data['id'])) ? $data['version'] : null;
-        $this->$buildId = (!empty($data['buildId'])) ? $data['buildId'] : null;
-        $this->$path = (!empty($data['path'])) ? $data['path'] : null;
-        $this->$date = (!empty($data['date'])) ? $data['date'] : null;
+        $this->id = (!empty($data['id'])) ? $data['id'] : null;
+        $this->buildId = (!empty($data['buildId'])) ? $data['buildId'] : null;
+        $this->path = (!empty($data['path'])) ? $data['path'] : null;
+        $this->date = (!empty($data['date'])) ? $data['date'] : null;
     }
 }

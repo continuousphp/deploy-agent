@@ -22,6 +22,10 @@ class DeploymentTable
 
     public function fetchAll()
     {
+        $this->tableGateway->getAdapter()->query("CREATE TABLE IF NOT EXISTS deployment(
+                                            path varchar(100) not null,
+                                            date int not null,
+                                            buildId varchar(100) not null)");
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }

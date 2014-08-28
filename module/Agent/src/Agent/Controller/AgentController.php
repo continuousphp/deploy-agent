@@ -40,6 +40,9 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
         $config = new Config($this->getConfig());
         $buildId = $this->getRequest()->getPost('build_id');
         $url = $this->getRequest()->getPost('package_url');
+        // @todo Remove default testing
+        $projectRepo = $this->getRequest()->getPost('repository_name','testing');
+        $projectName = $config->project[$projectRepo];
         $keyManager = new ApiKeyManager($buildId);
         $url = $url . '?apikey=' . $keyManager->getHash();
         AgentLogger::initLogger($config->buildPath);
@@ -53,9 +56,8 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
                 if (! $tarball->extract())
                     throw new Exception('Extraction failed.');
                 $tarball->cleanTemporaryFile();
-                $projectFolder =$config->projectPath . $config->applicationName;
-                $this->pushNewBuild($buildId,$buildFolder,$config->projectPath,$config->applicationName);
-                Phing::Execute($projectFolder);
+                $this->pushNewBuild($buildId,$buildFolder,$config->projectPath,$projectName);
+                Phing::Execute($config->projectPath . $projectName);
             } else {
                 AgentLogger::error("Invalid api key. Deployment aborted");
             }
@@ -64,6 +66,13 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
             AgentLogger::error("  Details:" . $e->getMessage());
         }
         return new ViewModel(array());
+    }
+
+    public function adminAction()
+    {
+        return new ViewModel(array(
+            'deployments' => $this->getDeploymentTable()->fetchAll(),
+        ));
     }
 
     private function pushNewBuild($buildId,$buildFolder,$workspacePath,$applicationName)

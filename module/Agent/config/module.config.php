@@ -36,7 +36,7 @@ return array(
                             'route' => '/agent',
                             'defaults' => array(
                                 'controller' => 'Agent\Controller\Agent',
-                                'action'     => 'index',
+                                'action'     => 'admin',
                             ),
                         ),
                     ),
