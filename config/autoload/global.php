@@ -13,11 +13,8 @@
 
 return array(
     'db' => array(
-        'driver'         => 'Pdo',
-        'dsn'            => 'mysql:dbname=deploy_agent',
-        'driver_options' => array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
-        ),
+        'driver'         => 'Pdo_Sqlite',
+        'database' => __DIR__ . '/../../data/deploy.sqlite',
     ),
     'service_manager' => array(
         'factories' => array(

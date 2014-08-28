@@ -11,6 +11,9 @@ return array(
     'deployAgent' => array(
         'projectPath'=> '/tmp/deploy-agent/',
         'buildPath' => '/tmp/deploy_agent_build/',
-        'applicationName' => 'MyContinuousProject',
+        'project' => array(
+            'testing' => 'zendframework-ZendSkeletonModule-2349bf5',
+            'deploy-agent' => 'deploy-agent'
+        )
     )
 );

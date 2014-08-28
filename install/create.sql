@@ -15,11 +15,11 @@ GRANT ALL ON deploy_agent.* TO 'deploy_agent'@'localhost' IDENTIFIED BY 'Yic6SnY
 --
 -- Table
 --
-CREATE TABLE deployment(
+CREATE TABLE IF NOT EXISTS deployment(
 	id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	path varchar(100) not null,
 	date int not null,
-	buildId varchar(100) not null)
+	buildId varchar(100) not null);
 
 
 
