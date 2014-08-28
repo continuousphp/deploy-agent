@@ -6,22 +6,16 @@ return array(
             'Agent\Controller\Agent' => 'Agent\Controller\AgentController'
         ),
     ),
+    'service_manager' => array(
+        'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\Adapter',
+        'Agent\Model\DeploymentTable' => 'Agent\Model\DeploymentTable'
+    ),
     'router' => array(
         'routes' => array(
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => 'Agent\Controller\Agent',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
-            'agent' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/agent[/:action]',
+                    'route'    => '/[/:action]',
                     'defaults' => array(
                         'controller' => 'Agent\Controller\Agent',
                         'action'     => 'index',

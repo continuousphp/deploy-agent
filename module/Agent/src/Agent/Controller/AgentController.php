@@ -40,6 +40,8 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
         $config = new Config($this->getConfig());
         $buildId = $this->getRequest()->getPost('build_id');
         $url = $this->getRequest()->getPost('package_url');
+        if (empty($url)) return; // return 200
+
         // @todo Remove default testing
         $projectRepo = $this->getRequest()->getPost('repository_name','testing');
         $projectName = $config->project[$projectRepo];
