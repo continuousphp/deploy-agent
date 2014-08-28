@@ -2,13 +2,15 @@
 
 namespace Agent\Controller;
 
+use SebastianBergmann\Exporter\Exception;
+use Zend\Ldap\Node\RootDse\eDirectory;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 use Zend\Http\Response;
 
+use Agent\ConfigAwareInterface;
 use Agent\Service\DeployManager as DeployManagerService;
-
 
 class AgentController extends AbstractActionController implements ConfigAwareInterface
 {
@@ -21,38 +23,23 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
     public function indexAction()
     {
         $config = new Config($this->getConfig());
-        $buildId = $this->getRequest()->getPost('build_id');
+        $build = $this->getRequest()->getPost('build_id');
         $url = $this->getRequest()->getPost('package_url');
-        if (empty($url)) return; // return 200
 
         // @todo Remove default testing
-        $projectRepo = $this->getRequest()->getPost('repository_name','testing');
-        $projectName = $config->project[$projectRepo];
-        $keyManager = new ApiKeyManager($buildId);
-        $url = $url . '?apikey=' . $keyManager->getHash();
-        AgentLogger::initLogger($config->buildPath);
-        $buildFolder = $config->buildPath . 'build_'.$buildId.'/';
-        try {
-            $tarball = new Tarball($buildFolder);
-            $stream = $tarball->streamFromUrl($url);
-            if ($this->vadidateHash($keyManager, $stream)) {
-                $tarball->createFromResponseStream($stream);
+        $project = $this->getRequest()->getPost('project_name','testing');
 
-                if (! $tarball->extract())
-                    throw new Exception('Extraction failed.');
-                $tarball->cleanTemporaryFile();
-                $this->pushNewBuild($buildId,$buildFolder,$config->projectPath,$projectName);
-                Phing::Execute($config->projectPath . $projectName);
-            } else {
-                AgentLogger::error("Invalid api key. Deployment aborted");
-            }
-        } catch (Exception $e) {
-            AgentLogger::error("An error has occurs during the deployment.");
-            AgentLogger::error("  Details:" . $e->getMessage());
-        if (!empty($config) && !empty($url) && !empty($buildId)) {
+        $validator = new \Zend\Validator\Uri(array(
+            'allowRelative' => false
+        ));
+        if (!$validator->isValid($url))
+            return;
+
+        if (!empty($config) && !empty($url) && !empty($build) && !empty($project)) {
             $service = $this->getDeployManagerService();
-            $service->deploy($buildId, $url, $config);
+            $service->deploy($build, $url, $project, $config);
         }
+
         return new ViewModel(array());
     }
 
@@ -89,5 +76,4 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
     {
         return $this->config;
     }
-
 }

@@ -5,9 +5,12 @@ return array(
             'Zend\Db\Adapter\Adapter' => function ($sm) {
                     return new Zend\Db\Adapter\Adapter(array(
                         'driver' => 'PDO_SQLITE',
-                        'dsn' => 'sqlite:/../../data/db/deploy.db'
+                        'database' => 'sqlite:../../data/db/deploy.sqlite'
                     ));
                 }
+        ),
+        'aliases' => array(
+          'db' => 'Zend\Db\Adapter\Adapter'
         ),
     ),
 );

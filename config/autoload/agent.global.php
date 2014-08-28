@@ -11,6 +11,10 @@ return array(
     'deployAgent' => array(
         'projectPath'=> '/tmp/deploy-agent/',
         'buildPath' => '/tmp/deploy_agent_build/',
+
+        /**
+         * Key/Value array for Project Name / Destination folder
+         */
         'project' => array(
             'testing' => 'zendframework-ZendSkeletonModule-2349bf5',
             'deploy-agent' => 'deploy-agent'

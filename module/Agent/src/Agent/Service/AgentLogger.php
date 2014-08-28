@@ -8,7 +8,6 @@
 
 namespace Agent\Service;
 
-
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
 
@@ -16,10 +15,8 @@ class AgentLogger {
 
     private static $logger = null;
 
-
-    private function __construct() {
+    public function __construct() {
     }
-
 
     public static function initLogger($filePath) {
         if(is_null(self::$logger)) {

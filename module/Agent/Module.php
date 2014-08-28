@@ -50,6 +50,11 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
                 'agent_deploymanager_service' => 'Agent\Service\DeployManager',
             ),
             'factories' => array(
+                'agent_logger_service' => function($sm) {
+                    $logger = new \Agent\Service\AgentLogger();
+                    $logger->initLogger($sm->get('Config')['deployAgent']['buildPath']);
+                    return $logger;
+                },
                 'Agent\Model\DeploymentTable' => function ($sm) {
                         $tableGateway = $sm->get('DeploymentTableGateway');
                         $table = new DeploymentTable($tableGateway);
