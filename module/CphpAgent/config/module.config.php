@@ -7,8 +7,22 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\Adapter',
-        'CphpAgent\Model\DeploymentTable' => 'CphpAgent\Model\DeploymentTable'
+    ),
+    'doctrine' => array(
+        'driver' => array(
+            'cphpagent_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(
+                    dirname(__DIR__) . '/src/CphpAgent/Entity',
+                )
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'CphpAgent\Entity' => 'cphpagent_driver',
+                )
+            )
+        ),
     ),
     'router' => array(
         'routes' => array(

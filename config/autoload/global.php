@@ -12,14 +12,4 @@
  */
 
 return array(
-    'db' => array(
-        'driver'         => 'Pdo_Sqlite',
-        'database' => __DIR__ . '/../../data/deploy.sqlite',
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            'Zend\Db\Adapter\Adapter'
-            => 'Zend\Db\Adapter\AdapterServiceFactory',
-        ),
-    ),
 );
