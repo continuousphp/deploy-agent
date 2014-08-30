@@ -1,6 +1,6 @@
 <?php
 
-namespace CphpAgent;
+namespace CphpAgent\Config;
 
 interface ConfigAwareInterface
 {

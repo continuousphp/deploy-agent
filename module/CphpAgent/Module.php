@@ -2,11 +2,14 @@
 
 namespace CphpAgent;
 
+use CphpAgent\Service\AgentLogger;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+
+use CphpAgent\Config\ConfigAwareInterface;
 
 class Module implements ConfigProviderInterface, ServiceProviderInterface
 {
@@ -42,7 +45,7 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
                 'cphpagent_project_service' => 'CphpAgent\Factory\ProjectServiceFactory',
 
 //                'cphpagent_logger_service' => function($sm) {
-//                    $logger = new \Agent\Service\AgentLogger();
+//                    $logger = new AgentLogger();
 //                    $logger->initLogger($sm->get('Config')['deployAgent']['buildPath']);
 //                    return $logger;
 //                },

@@ -8,7 +8,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 use Zend\Http\Response;
 
-use CphpAgent\ConfigAwareInterface;
+use CphpAgent\Config\ConfigAwareInterface;
 use CphpAgent\Service\DeployManager as DeployManagerService;
 
 class AgentController extends AbstractActionController implements ConfigAwareInterface, ServiceLocatorAwareInterface
@@ -23,9 +23,9 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
     public function indexAction()
     {
         $config = new Config($this->getConfig());
-        $build = $this->getRequest()->getPost('build_id');
-        $url = $this->getRequest()->getPost('package_url');
-        $project = $this->getRequest()->getPost('project_name');
+        $build = $this->params()->fromPost('build_id');
+        $url = $this->params()->fromPost('package_url');
+        $project = $this->params()->fromQuery('project_name');
 
 //        $validator = new \Zend\Validator\Uri(array(
 //            'allowRelative' => false
