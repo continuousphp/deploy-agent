@@ -2,7 +2,6 @@
 
 namespace CphpAgent;
 
-use CphpAgent\Service\AgentLogger;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 

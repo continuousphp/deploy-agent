@@ -35,7 +35,7 @@ return array(
                     'filter' => \Zend\Log\Logger::DEBUG, // options: EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG
                     'adapter' => '\Zend\Log\Writer\Stream',
                     'options' => array(
-                        'output' => '/tmp/deploy_agent_build/',
+                        'output' => __DIR__ . '/../../data/logs/',
                         'file' => 'deployments.log'
                     ),
                 )

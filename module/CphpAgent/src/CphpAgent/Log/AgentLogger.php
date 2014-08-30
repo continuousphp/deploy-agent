@@ -4,14 +4,14 @@
 namespace CphpAgent\Log;
 
 use Zend\Log\Logger as ZendLogger;
-use Zend\Log\Writer\Stream;
 
 /**
  * Class AgentLogger
  *
  * @package CphpAgent\Log
  */
-class AgentLogger extends ZendLogger{
+class AgentLogger extends ZendLogger
+{
 
     /**
      * Log message with priority
@@ -21,7 +21,8 @@ class AgentLogger extends ZendLogger{
      * @param array $extra
      * @return ZendLogger
      */
-    final public function log($priority, $message, $extra = array()) {
+    final public function log($priority, $message, $extra = array())
+    {
         return parent::log($priority, $message, $extra);
     }
 
@@ -30,7 +31,8 @@ class AgentLogger extends ZendLogger{
      *
      * @param $msg
      */
-    public function error($msg){
+    public function error($msg)
+    {
         $this->err($msg);
     }
 } 

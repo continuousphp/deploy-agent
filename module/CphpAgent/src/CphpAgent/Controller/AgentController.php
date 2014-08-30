@@ -27,12 +27,6 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
         $url = $this->params()->fromPost('package_url');
         $project = $this->params()->fromQuery('project_name');
 
-//        $validator = new \Zend\Validator\Uri(array(
-//            'allowRelative' => false
-//        ));
-//        if (!$validator->isValid($url))
-//            return;
-
         if (!empty($config) && !empty($url) && !empty($build) && !empty($project)) {
             $service = $this->getDeployManagerService();
             $service->deploy($build, $url, $project, $config);

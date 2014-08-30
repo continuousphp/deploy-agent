@@ -2,8 +2,8 @@
 
 namespace CphpAgent\Factory;
 
+use SebastianBergmann\Exporter\Exception;
 use Zend\Log\Filter\Priority;
-use Zend\Log\Writer\Stream;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\FactoryInterface;
 
@@ -30,10 +30,12 @@ class AgentLoggerFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
         $config = $config['deployAgent']['logger'];
-
-        $this->setLogger(new AgentLogger());
-        $this->configureWriters($config);
-
+        try {
+            $this->setLogger(new AgentLogger());
+            $this->configureWriters($config);
+        } catch (Exception $e) {
+            throw new Exception('Problem occurs when creating an agent logger');
+        }
         return $this->getLogger();
     }
 

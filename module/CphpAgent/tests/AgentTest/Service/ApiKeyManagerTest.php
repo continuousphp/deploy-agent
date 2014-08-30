@@ -1,7 +1,8 @@
 <?php
 
 namespace CphpAgentTest\Service;
-use Agent\Service\ApiKeyManager;
+
+use CphpAgent\Service\ApiKeyManager;
 use PHPUnit_Framework_TestCase;
 
 class ApiKeyManagerTest extends PHPUnit_Framework_TestCase

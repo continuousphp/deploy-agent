@@ -2,7 +2,7 @@
 
 namespace CphpAgentTest\Service;
 
-use Agent\Service\UrlValidator;
+use CphpAgent\Service\UrlValidator;
 use PHPUnit_Framework_TestCase;
 
 
