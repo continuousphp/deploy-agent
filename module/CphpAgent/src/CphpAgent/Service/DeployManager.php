@@ -30,9 +30,10 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      */
     public function deploy($buildId, $packageUrl, $project, $config)
     {
+
         // @todo: options function or object
-        if (!array_key_exists($project, $config->project))
-            return;
+//        if (!array_key_exists($project, $config->project))
+//            return;
 
         $projectName = $config->project[$project];
         $keyManager = new ApiKeyManager($buildId);
@@ -42,28 +43,32 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
         );
 
         $url = $packageUrl . '?' . http_build_query($params);
-        AgentLogger::initLogger($config->buildPath);
+        $this->getLogger()->info('######## START DEPLOYMENT ########');
         $buildFolder = $config->buildPath . 'build_'.$buildId.'/';
 
         try {
             $tarball = new Tarball($buildFolder);
             $stream = $tarball->streamFromUrl($url);
+
             if ($this->vadidateHash($keyManager, $stream)) {
                 $tarball->createFromResponseStream($stream);
 
-                if (! $tarball->extract())
+                if (! $tarball->extract()){
+                    $this->getLogger()->error('Extaction failed.');
                     throw new Exception('Extraction failed.');
+                }
+
                 $tarball->cleanTemporaryFile();
                 $this->pushNewBuild($buildId,$buildFolder,$config->projectPath,$projectName);
+
                 Phing::Execute($config->projectPath . $projectName);
             } else {
-                AgentLogger::error("Invalid api key. Deployment aborted");
+                $this->getLogger()->error("Invalid api key. Deployment aborted");
             }
         } catch (Exception $e) {
-            AgentLogger::error("An error has occurs during the deployment.");
-            AgentLogger::error("  Details:" . $e->getMessage());
+            $this->getLogger()->error("An error has occurs during the deployment.");
+            $this->getLogger()->error("  Details:" . $e->getMessage());
         }
-
     }
 
     private function pushNewBuild($buildId, $buildFolder, $workspacePath, $applicationName)
@@ -94,7 +99,7 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
     private function getLogger()
     {
         if (!$this->logger)
-            $this->logger = $this->getServiceManager()->get('agent_logger_service');
+            $this->logger = $this->getServiceManager()->get('cphpagent_logger');
         return $this->logger;
     }
 

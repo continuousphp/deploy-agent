@@ -42,13 +42,8 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
                 'cphpagent_deploymanager_service' => 'CphpAgent\Service\DeployManager',
             ),
             'factories' => array(
+                'cphpagent_logger' => 'CphpAgent\Factory\AgentLoggerFactory',
                 'cphpagent_project_service' => 'CphpAgent\Factory\ProjectServiceFactory',
-
-//                'cphpagent_logger_service' => function($sm) {
-//                    $logger = new AgentLogger();
-//                    $logger->initLogger($sm->get('Config')['deployAgent']['buildPath']);
-//                    return $logger;
-//                },
             ),
         );
     }
