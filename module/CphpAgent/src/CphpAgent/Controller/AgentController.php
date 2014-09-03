@@ -7,7 +7,6 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\View\Model\ViewModel;
 use Zend\Config\Config;
 use Zend\Http\Response;
-
 use CphpAgent\Config\ConfigAwareInterface;
 use CphpAgent\Service\DeployManager as DeployManagerService;
 
@@ -31,8 +30,6 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
             $service = $this->getDeployManagerService();
             $service->deploy($build, $url, $project, $config);
         }
-
-
         return new ViewModel(array());
     }
 
@@ -48,7 +45,7 @@ class AgentController extends AbstractActionController implements ConfigAwareInt
     public function getDeployManagerService()
     {
         if (!$this->deployManagerService) {
-            $this->deployManagerService = $this->getServiceLocator()->get('cphpagent_deploymanager_service');
+            $this->deployManagerService = $this->getServiceLocator()->get('cphp-agent.service.deploy-manager');
         }
         return $this->deployManagerService;
     }

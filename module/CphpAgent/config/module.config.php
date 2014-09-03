@@ -1,12 +1,13 @@
 <?php
 
-return array(
-    'controllers' => array(
-        'invokables' => array(
-            'CphpAgent\Controller\Agent' => 'CphpAgent\Controller\AgentController'
-        ),
-    ),
-    'service_manager' => array(
+return [
+    'controllers' => [
+        'invokables' => 
+            [
+                'CphpAgent\Controller\Agent' => 'CphpAgent\Controller\AgentController'
+            ] 
+    ],
+    'service_manager' => [
         'abstract_factories' =>
             [
                 'CphpAgent\Mapper\AbstractFactory',
@@ -16,65 +17,71 @@ return array(
             [
                 'CphpAgent\Mapper\Initializer',
             ],
-    ),
-    'doctrine' => array(
-        'driver' => array(
-            'cphpagent_driver' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => array(
-                    dirname(__DIR__) . '/src/CphpAgent/Entity',
-                )
-            ),
-            'orm_default' => array(
-                'drivers' => array(
-                    'CphpAgent\Entity' => 'cphpagent_driver',
-                )
-            )
-        ),
-    ),
-    'router' => array(
-        'routes' => array(
-            'home' => array(
+    ],
+    'doctrine' => [
+        'driver' => [
+            'cphpagent_driver' =>
+                [
+                    'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                    'cache' => 'array',
+                    'paths' =>
+                        [
+                            dirname(__DIR__) . '/src/CphpAgent/Entity',
+                        ]
+                ],
+            'orm_default' =>
+                [
+                    'drivers' =>
+                        [
+                            'CphpAgent\Entity' => 'cphpagent_driver',
+                        ]
+                ]
+        ],
+    ],
+    'router' => [
+        'routes' => [
+            'home' => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/[/:action]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'CphpAgent\Controller\Agent',
                         'action'     => 'index',
-                    ),
-                ),
-            ),
-            'zfcadmin' => array(
-                'child_routes' => array(
-                    'agent' => array(
+                    ],
+                ],
+            ],
+            'zfcadmin' => [
+                'child_routes' => [
+                    'agent' => [
                         'type' => 'literal',
-                        'options' => array(
+                        'options' => [
                             'route' => '/agent',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'CphpAgent\Controller\Agent',
                                 'action'     => 'admin',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'view_manager' => array(
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
-        'template_map' => array(
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-            'agent/agent/index' => __DIR__ . '/../view/agent/agent/index.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
-        ),
-        'template_path_stack' => array(
-            'CphpAgent' => __DIR__ . '/../view',
-        ),
-    ),
-);
+        'template_map' =>
+            [
+                'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+                'agent/agent/index' => __DIR__ . '/../view/agent/agent/index.phtml',
+                'error/404'               => __DIR__ . '/../view/error/404.phtml',
+                'error/index'             => __DIR__ . '/../view/error/index.phtml',
+            ],
+        'template_path_stack' =>
+            [
+                'CphpAgent' => __DIR__ . '/../view',
+            ],
+    ],
+];
