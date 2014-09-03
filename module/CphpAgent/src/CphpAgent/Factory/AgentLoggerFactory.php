@@ -77,7 +77,7 @@ class AgentLoggerFactory implements FactoryInterface
             $path .= $writer['options']['file'];
 
         $stream = new $adapter($path);
-        $this->logger->addWriter($stream);
+        $this->getLogger()->addWriter($stream);
         $stream->addFilter(new Priority($writer['filter']));
 
         return $adapter;

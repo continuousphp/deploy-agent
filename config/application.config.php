@@ -5,6 +5,7 @@ return array(
         'DoctrineModule',
         'DoctrineORMModule',
         'ZfcAdmin',
+        'BsbPhingService',
         'CphpAgent',
     ),
 

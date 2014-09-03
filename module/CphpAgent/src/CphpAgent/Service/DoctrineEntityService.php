@@ -6,6 +6,7 @@ use Zend\ServiceManager\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
+
 class DoctrineEntityService implements
     ServiceManagerAwareInterface
 {

@@ -10,19 +10,19 @@ return array(
         /**
          * Destination path for your project
          */
-        'projectPath' => '/tmp/deploy-agent/',
+        'projectPath' => '/tmp/www/',
 
         /**
-         * Temporary path where every are conserved during deployments
+         * Path where every are conserved during deployments
          */
-        'buildPath' => '/tmp/deploy_agent_build/',
+        'buildPath' => '/tmp/www/deploy_agent_builds/',
 
         /**
          * Key/Value array for Project Name / Destination folder
          */
         'project' => array(
             'testing' => 'zendframework-ZendSkeletonModule-2349bf5',
-            'deploy-agent' => 'deploy-agent'
+            'deploy-agent' => 'testing-agent'
         ),
 
         /**

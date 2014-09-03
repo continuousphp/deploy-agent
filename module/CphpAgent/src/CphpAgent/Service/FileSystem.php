@@ -6,6 +6,8 @@
  */
 namespace CphpAgent\Service;
 
+use Zend\Http\PhpEnvironment\Request;
+
 /**
  * Class FileSystem
  *
@@ -13,6 +15,10 @@ namespace CphpAgent\Service;
  */
 class FileSystem
 {
+    const SYMLINK_FILE = 0;
+    const SYMLINK_DIR = 1;
+    const SYMLINK_JUNCTION = 2;
+
     public static function mkdirp($dir, $mode = 0777, $recursive = true)
     {
         if (empty($dir))
@@ -21,7 +27,7 @@ class FileSystem
         if (is_dir($dir) || $dir === '/')
             return true;
 
-        if (self::mkdirp(dirname($dir), $mode, $recursive)){
+        if (self::mkdirp(dirname($dir), $mode, $recursive)) {
             mkdir($dir, $mode);
             chmod($dir, $mode);
             return $dir;
@@ -31,10 +37,56 @@ class FileSystem
     }
 
     /**
+     * Create link for Windows or Unix
+     *
+     * @param $source
+     * @param $destination
+     * @param string $os
+     * @return bool|string
+     */
+    public static function link($source, $destination, $os = 'unix')
+    {
+        if ($os == 'win')
+            $result = self::mklink($source, $destination);
+        else
+            $result = symlink($source, $destination);
+
+        return $result;
+    }
+
+    /**
+     * Create Windows symbolic links
+     *
+     * @param $target
+     * @param $link
+     * @param int $flag
+     * @return string
+     */
+    private static function mklink($target, $link, $flag = self::SYMLINK_DIR)
+    {
+        switch ($flag) {
+            case self::SYMLINK_DIR:
+                $pswitch = '/d';
+                break;
+            case self::SYMLINK_JUNCTION:
+                $pswitch = '/j';
+                break;
+            case self::SYMLINK_FILE:
+            default:
+                $pswitch = '';
+                break;
+        }
+        // Change / to \ because it will break otherwise.
+        $target = str_replace('/', '\\', $target);
+        $link = str_replace('/', '\\', $link);
+        return exec('mklink ' . $pswitch . ' "' . $link . '" "' . $target . '"');
+    }
+
+    /**
      * Copy a file, or recursively copy a folder and its contents
-     * @param       string   $source    Source path
-     * @param       string   $dest      Destination path
-     * @param       string   $permissions New folder creation permissions
+     * @param       string $source Source path
+     * @param       string $dest Destination path
+     * @param       string $permissions New folder creation permissions
      * @return      bool     Returns true on success, false on failure
      */
     public static function xcopy($source, $dest, $permissions = 0755)
@@ -55,7 +107,7 @@ class FileSystem
             self::mkdirp($dest);
         }
 
-        if(substr($source, -1)==='/')
+        if (substr($source, -1) === '/')
             $source = substr($source, 0, -1);
         // Loop through the folder
         $dir = dir($source);

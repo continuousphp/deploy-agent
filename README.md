@@ -9,12 +9,26 @@ You can get started in minutes by installing this Agent through Composer in your
 * Composer
 * Phing
 * The ability to run php from the commandline exec
+* The ability to create symlink
 
 # Features
 ==
 
+* Connect to Continuous Php server
+* Download and extract tarball
+* Use symlinks or copy files
+* Compatible with Windows Environment
+* Use the standard Phing
 
 # Installation
 ==
 
-Coming soon ...
+    ## Install the deploy agent with composer
+
+    ./composer.phar up
+
+    ## Allow symlink creation
+
+    Add this line in your vhost:
+
+    Options +FollowSymLinks +SymLinksIfOwnerMatch

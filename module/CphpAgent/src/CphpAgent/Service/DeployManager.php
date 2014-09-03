@@ -9,7 +9,6 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
 use ZfcBase\EventManager\EventProvider;
 use SebastianBergmann\Exporter\Exception;
 
-use CphpAgent\Deploy\Adapter\Phing;
 use CphpAgent\Deploy\Adapter\Tarball;
 
 class DeployManager extends EventProvider implements ServiceManagerAwareInterface, LoggerAwareInterface
@@ -54,16 +53,17 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
             $stream = $this->connect($url);
 
             if ($this->vadidateHash($keyManager, $stream)) {
-                if ($this->delivery($stream)) {
+                if ($this->retrieve($stream)) {
                     $this->pushNewBuild($buildId, $buildFolder, $config->projectPath, $projectName);
                     $this->execute($config->projectPath . $projectName);
                 }
             } else {
-                $this->getLogger()->error("Invalid api key. Deployment aborted");
+                $this->getLogger()->error('Invalid api key. Deployment aborted');
             }
         } catch (Exception $e) {
-            $this->getLogger()->error("An error has occurs during the deployment.");
-            $this->getLogger()->error("  Details:" . $e->getMessage());
+            $this->getLogger()->error('An error has occurs during the deployment.');
+            $this->getLogger()->error('  Details:' . $e->getMessage());
+            $this->getLogger()->error('  Details:' . $e->getTraceAsString());
         }
     }
 
@@ -75,7 +75,7 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      */
     private function connect($url)
     {
-        $this->getLogger()->info('Connect to continuous php server');
+        $this->getLogger()->info('Connect to continuous php server...');
         $stream = $this->getTarball()->streamFromUrl($url);
         $this->getLogger()->info('Connected to continuous php server successfully! [done]');
 
@@ -89,12 +89,13 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      * @return bool
      * @throws \SebastianBergmann\Exporter\Exception
      */
-    private function delivery($stream)
+    private function retrieve($stream)
     {
-        $this->getLogger()->info('Downloading tarball');
+        $this->getLogger()->info('Downloading tarball...');
         $this->getTarball()->createFromResponseStream($stream);
+        $this->getLogger()->info('Downloaded [done]');
 
-        $this->getLogger()->info('Extraction');
+        $this->getLogger()->info('Extracting...');
         if (!$extracted = $this->getTarball()->extract()) {
             $this->getLogger()->error('Extaction failed.');
             throw new Exception('Extraction failed.');
@@ -112,9 +113,9 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      */
     private function clean()
     {
-        $this->getLogger()->info('Delete temporary files');
+        $this->getLogger()->info('Deleting temporary files');
         $result = $this->getTarball()->cleanTemporaryFile();
-        if ($result) $this->getLogger()->info('Deleted temporary files successfully!');
+        if ($result) $this->getLogger()->info('Deleted temporary files successfully! [done]');
 
         return $result;
     }
@@ -124,15 +125,17 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      *
      * @param $buildId
      * @param $buildFolder
-     * @param $workspacePath
+     * @param $wwwPath
      * @param $applicationName
      */
-    private function pushNewBuild($buildId, $buildFolder, $workspacePath, $applicationName)
+    private function pushNewBuild($buildId, $buildFolder, $wwwPath, $applicationName)
     {
-        $this->getLogger()->info('Push new build');
-        // save new build in database
-        FileSystem::rrmdir($workspacePath . $applicationName);
-        FileSystem::xcopy($buildFolder, $workspacePath);
+        $this->getLogger()->info('Pushing new build...');
+        // @todo: save new build in database
+
+        FileSystem::rrmdir($wwwPath . $applicationName);
+        FileSystem::link($buildFolder, $wwwPath . $applicationName);
+        //FileSystem::xcopy($buildFolder, $workspacePath);
         $this->getLogger()->info('Pushed the new build succesfully! [done]');
     }
 
@@ -140,14 +143,23 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      * Execute phing command
      *
      * @param $destination
+     * @return bool
      */
     private function execute($destination)
     {
-        $this->getLogger()->info("Phing execute.");
-        $result = Phing::Execute($destination);
-        $this->getLogger()->info("Project deployed successfully!");
+        $buildResult = false;
+        $this->getLogger()->info('Executing Phing ...');
+        $buildFile = $destination . 'build.xml';
+        if(is_file($buildFile)){
+            $options = array('buildFile' => $buildFile);
+            $buildResult = $this->getServiceManager()->get('BsbPhingService')->build('show-defaults dist', $options);
+            $this->getLogger()->info(implode($buildResult));
+        }else{
+            $this->getLogger()->info('No build.xml phing file find in root directory!');
+        }
+        $this->getLogger()->info('Project deployed successfully! [done]');
 
-        return $result;
+        return $buildResult;
     }
 
 
@@ -160,7 +172,9 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
     }
 
     /**
-     * Getter/setter logger
+     * Set Agent Logger
+     *
+     * @return array|AgentLogger|object
      */
     private function getLogger()
     {
@@ -169,11 +183,15 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
         return $this->logger;
     }
 
+    /**
+     * Get Agent Logger
+     *
+     * @param LoggerInterface $logger
+     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
-
 
     /**
      * Set service manager instance
