@@ -2,22 +2,24 @@
 
 namespace CphpAgent\Service;
 
+use CphpAgent\Log\AgentLogger;
+use Zend\EventManager\EventManagerAwareTrait;
 use Zend\Log\LoggerAwareInterface;
+use Zend\Log\LoggerAwareTrait;
 use Zend\Log\LoggerInterface;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use ZfcBase\EventManager\EventProvider;
 use SebastianBergmann\Exporter\Exception;
 
 use CphpAgent\Deploy\Adapter\Tarball;
 
-class DeployManager extends EventProvider implements ServiceManagerAwareInterface, LoggerAwareInterface
+class DeployManager extends EventProvider implements ServiceLocatorAwareInterface, LoggerAwareInterface
 {
+    use ServiceLocatorAwareTrait, LoggerAwareTrait;
     /** @var  AgentLogger */
     protected $logger;
 
-    /** @var  ServiceManager */
-    protected $serviceManager;
 
     /** @var  Tarball */
     protected $tarball;
@@ -152,7 +154,7 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
         $buildFile = $destination . 'build.xml';
         if(is_file($buildFile)){
             $options = array('buildFile' => $buildFile);
-            $buildResult = $this->getServiceManager()->get('BsbPhingService')->build('show-defaults dist', $options);
+            $buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('show-defaults dist', $options);
             $this->getLogger()->info(implode($buildResult));
         }else{
             $this->getLogger()->info('No build.xml phing file find in root directory!');
@@ -176,10 +178,10 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
      *
      * @return array|AgentLogger|object
      */
-    private function getLogger()
+    public function getLogger()
     {
         if (!$this->logger)
-            $this->logger = $this->getServiceManager()->get('cphpagent_logger');
+            $this->logger = $this->getServiceLocator()->get('cphpagent_logger');
         return $this->logger;
     }
 
@@ -191,28 +193,6 @@ class DeployManager extends EventProvider implements ServiceManagerAwareInterfac
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
-    }
-
-    /**
-     * Set service manager instance
-     *
-     * @param ServiceManager $serviceManager
-     * @return ServiceManager
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        return $this;
-    }
-
-    /**
-     * Get service manager instance
-     *
-     * @return ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
     }
 
     /**

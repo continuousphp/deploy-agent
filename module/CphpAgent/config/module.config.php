@@ -7,6 +7,15 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'abstract_factories' =>
+            [
+                'CphpAgent\Mapper\AbstractFactory',
+                'CphpAgent\Service\AbstractFactory',
+            ],
+        'initializers' =>
+            [
+                'CphpAgent\Mapper\Initializer',
+            ],
     ),
     'doctrine' => array(
         'driver' => array(
