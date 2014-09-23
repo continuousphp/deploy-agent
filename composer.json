@@ -1,0 +1,24 @@
+{
+    "name": "zendframework/deploy-agent",
+    "description": "Deplay agent for ContinuousPhp",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "framework",
+        "zf2"
+    ],
+    "homepage": "http://framework.zend.com/",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.3.*",
+        "zf-commons/zfc-base": "dev-master",
+        "zf-commons/zfc-admin": "0.1.0",
+        "doctrine/doctrine-orm-module": "~0.8",
+        "pear/archive_tar": "1.3.11",
+        "phing/phing" : "2.7.*",
+        "bushbaby/zf2-module-phing-service":"1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.1.*",
+        "mikey179/vfsStream": "1.3.*@dev"
+    }
+}
