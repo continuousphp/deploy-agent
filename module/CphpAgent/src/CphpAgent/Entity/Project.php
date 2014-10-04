@@ -42,12 +42,6 @@ class Project {
      */
     protected $builds;
 
-    /**
-     * @var ExcludedFile
-     * @ORM\OneToMany(targetEntity="\CphpAgent\Entity\ExcludedFile",mappedBy="project", cascade={"persist","remove","detach","merge","refresh"})
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
-     */
-    protected $excludedFiles;
 
     /**
      * @param int $id

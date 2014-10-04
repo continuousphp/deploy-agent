@@ -6,7 +6,6 @@
  */
 namespace CphpAgent\Service;
 
-use Zend\Http\PhpEnvironment\Request;
 
 /**
  * Class FileSystem
@@ -18,6 +17,8 @@ class FileSystem
     const SYMLINK_FILE = 0;
     const SYMLINK_DIR = 1;
     const SYMLINK_JUNCTION = 2;
+    const OS_UNIX = 'unix';
+    const OS_WINDOWS = 'win';
 
     public static function mkdirp($dir, $mode = 0777, $recursive = true)
     {
@@ -44,9 +45,9 @@ class FileSystem
      * @param string $os
      * @return bool|string
      */
-    public static function link($source, $destination, $os = 'unix')
+    public static function link($source, $destination, $os = self::OS_UNIX)
     {
-        if ($os == 'win')
+        if ($os == self::OS_WINDOWS)
             $result = self::mklink($source, $destination);
         else
             $result = symlink($source, $destination);
@@ -86,7 +87,7 @@ class FileSystem
      * Copy a file, or recursively copy a folder and its contents
      * @param       string $source Source path
      * @param       string $dest Destination path
-     * @param       string $permissions New folder creation permissions
+     * @param       int|string $permissions New folder creation permissions
      * @return      bool     Returns true on success, false on failure
      */
     public static function xcopy($source, $dest, $permissions = 0755)
@@ -136,7 +137,10 @@ class FileSystem
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") self::rrmdir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                    if (filetype($dir . "/" . $object) == "dir")
+                        self::rrmdir($dir . "/" . $object);
+                    else
+                        unlink($dir . "/" . $object);
                 }
             }
             reset($objects);

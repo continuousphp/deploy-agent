@@ -5,9 +5,22 @@ return [
         'invokables' => 
             [
                 'CphpAgent\Controller\Agent' => 'CphpAgent\Controller\AgentController'
-            ] 
+            ]
     ],
     'service_manager' => [
+        'aliases' =>
+            [
+                'entity_manager' => 'Doctrine\ORM\EntityManager',
+            ],
+        'invokables' =>
+            [
+                'cphp-agent.service.deploy-manager' => 'CphpAgent\Service\DeployManager',
+                'cphp-agent.mapper.build' => 'CphpAgent\Mapper\Build',
+            ],
+        'factories' =>
+            [
+                'cphp-agent.logger' => 'CphpAgent\Factory\AgentLoggerFactory'
+            ],
         'abstract_factories' =>
             [
                 'CphpAgent\Mapper\AbstractFactory',

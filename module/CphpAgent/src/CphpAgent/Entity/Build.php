@@ -5,10 +5,18 @@ namespace CphpAgent\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Build Entity
+ *
+ * @package     CphpAgent
+ * @subpackage  Entity
+ * @author      Daniel Leivas <daniel@dasmuse.com>
+ * @copyright   Copyright (c) continuousphp - All rights reserved
+ * @license     http://opensource.org/licenses/BSD-3-Clause
+ *
  * @ORM\Entity(repositoryClass="CphpAgent\Repository\BuildRepository")
  * @ORM\Table(name="builds")
  */
-class Build {
+class Build extends EntityAbstract {
     /**
      * @var int
      * @ORM\Id
@@ -33,7 +41,7 @@ class Build {
      * @var Project
      * @ORM\ManyToOne(targetEntity="\CphpAgent\Entity\Project", inversedBy="builds", cascade={"persist","remove","detach","merge","refresh"})
      */
-    private $project;
+//    private $project;
 
     /**
      * @param int $id

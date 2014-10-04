@@ -51,4 +51,12 @@ abstract class EntityAbstract implements ArraySerializableInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getArrayCopy() {
+        $data = get_object_vars($this);
+        return $data['data'];
+    }
 }

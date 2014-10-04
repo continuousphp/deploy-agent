@@ -9,7 +9,7 @@
  * @license     http://opensource.org/licenses/BSD-3-Clause
  */
 
-namespace CphpAgent\Service;
+namespace CphpAgent\Api;
 use Zend\Crypt\Password\Bcrypt;
 
 /**

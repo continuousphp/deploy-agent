@@ -5,8 +5,9 @@
  * If you have a ./config/autoload/ directory set up for your project, you can
  * drop this config file in it and change the values as you wish.
  */
-return array(
-    'deployAgent' => array(
+return [
+    'deployAgent' => [
+
         /**
          * Destination path for your project
          */
@@ -20,26 +21,40 @@ return array(
         /**
          * Key/Value array for Project Name / Destination folder
          */
-        'project' => array(
-            'testing' => 'zendframework-ZendSkeletonModule-2349bf5',
-            'deploy-agent' => 'testing-agent'
-        ),
+        'projects' => [
+            /* project name */
+            'foo' =>
+                [
+                    /* folder name */
+                    'folder' => 'bar',
+
+                    /* Permanent resources paths */
+                    'permanentResources' =>
+                        [
+                            /* source folder             => destination in project folder */
+                            '/tmp/www/resources/bar/uploads/' => '/uploads',
+                        ],
+                ],
+        ],
+
 
         /**
          * Settings for Agent Logger
          */
-        'logger' => array(
-            'writers' => array(
-                'logfile' => array(
-                    'enabled' => true,
-                    'filter' => \Zend\Log\Logger::DEBUG, // options: EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG
-                    'adapter' => '\Zend\Log\Writer\Stream',
-                    'options' => array(
-                        'output' => __DIR__ . '/../../data/logs/',
-                        'file' => 'deployments.log'
-                    ),
-                )
-            )
-        )
-    )
-);
+        'logger' => [
+            'writers' => [
+                'logfile' =>
+                    [
+                        'enabled' => true,
+                        'filter' => \Zend\Log\Logger::DEBUG, // options: EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG
+                        'adapter' => '\Zend\Log\Writer\Stream',
+                        'options' =>
+                            [
+                                'output' => __DIR__ . '/../../data/logs/',
+                                'file' => 'deployments.log'
+                            ]
+                    ]
+            ]
+        ]
+    ]
+];

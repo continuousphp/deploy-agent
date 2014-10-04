@@ -37,13 +37,7 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
     public function getServiceConfig()
     {
         return array(
-            'invokables' => array(
-                'cphpagent_deploymanager_service' => 'CphpAgent\Service\DeployManager',
-            ),
-            'factories' => array(
-                'cphpagent_logger' => 'CphpAgent\Factory\AgentLoggerFactory',
-                'cphpagent_project_service' => 'CphpAgent\Factory\ProjectServiceFactory',
-            ),
+
         );
     }
 

@@ -13,6 +13,7 @@ use ZfcBase\EventManager\EventProvider;
 use SebastianBergmann\Exporter\Exception;
 
 use CphpAgent\Deploy\Adapter\Tarball;
+use CphpAgent\Api\KeyManager;
 
 class DeployManager extends EventProvider implements ServiceLocatorAwareInterface, LoggerAwareInterface
 {
@@ -38,10 +39,11 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
 //        if (!array_key_exists($project, $config->project))
 //            return;
 
-        $projectName = $config->project[$project];
+        $projectConfig = $config->projects->{$project};
+        $projectFolder = $projectConfig->folder;
 
-        // @todo: decoupling key mananger
-        $keyManager = new ApiKeyManager($buildId);
+        $keyManager = new KeyManager();
+        $keyManager->generate($buildId);
         $params = array(
             'apikey' => $keyManager->getHash(),
             'project_name' => $project
@@ -56,8 +58,8 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
 
             if ($this->vadidateHash($keyManager, $stream)) {
                 if ($this->retrieve($stream)) {
-                    $this->pushNewBuild($buildId, $buildFolder, $config->projectPath, $projectName);
-                    $this->execute($config->projectPath . $projectName);
+                    $this->pushNewBuild($buildId, $buildFolder, $config->projectPath, $projectConfig);
+                    $this->execute($config->projectPath . $projectFolder);
                 }
             } else {
                 $this->getLogger()->error('Invalid api key. Deployment aborted');
@@ -117,7 +119,10 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     {
         $this->getLogger()->info('Deleting temporary files');
         $result = $this->getTarball()->cleanTemporaryFile();
-        if ($result) $this->getLogger()->info('Deleted temporary files successfully! [done]');
+        if ($result)
+            $this->getLogger()->info('Deleted temporary files successfully! [done]');
+        else
+            $this->getLogger()->error('Deletion failed!');
 
         return $result;
     }
@@ -128,21 +133,51 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
      * @param $buildId
      * @param $buildFolder
      * @param $wwwPath
-     * @param $applicationName
+     * @param $projectConfig
      */
-    private function pushNewBuild($buildId, $buildFolder, $wwwPath, $applicationName)
+    private function pushNewBuild($buildId, $buildFolder, $wwwPath, $projectConfig)
     {
         $this->getLogger()->info('Pushing new build...');
-        // @todo: save new build in database
 
-        FileSystem::rrmdir($wwwPath . $applicationName);
-        FileSystem::link($buildFolder, $wwwPath . $applicationName);
-        //FileSystem::xcopy($buildFolder, $workspacePath);
+        // save build in database
+        $this->storeBuild($buildId);
+
+        // create link
+        $currentPath = $wwwPath . $projectConfig->folder;
+        if (filetype($currentPath) == 'link') unlink($currentPath);
+        FileSystem::link($buildFolder, $currentPath);
+
+        foreach($projectConfig->permanentResources as $resource => $link){
+            FileSystem::mkdirp($resource);
+            if (FileSystem::link($resource, $currentPath . $link))
+                $this->getLogger()->info('Permanent resource ' . $link . ' created.');
+            else
+                $this->getLogger()->error('Creation of permanent resource ' . $link . ' failed.');
+
+        }
+
         $this->getLogger()->info('Pushed the new build succesfully! [done]');
     }
 
     /**
-     * Execute phing command
+     * Store build in database
+     *
+     * @param $buildId
+     */
+    private function storeBuild($buildId){
+        $buildMapper = $this->getServiceLocator()->get('cphp-agent.mapper.build');
+        $data = [
+            'name' => $buildId,
+            'date' => new \DateTime('now'),
+        ];
+        $build = new \CphpAgent\Entity\Build();
+        $build->exchangeArray($data);
+        $buildMapper->store($build);
+        $buildMapper->flush();
+    }
+
+    /**
+     * Execute Phing command
      *
      * @param $destination
      * @return bool
@@ -157,7 +192,7 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
             $buildResult = $this->getServiceLocator()->get('BsbPhingService')->build('show-defaults dist', $options);
             $this->getLogger()->info(implode($buildResult));
         }else{
-            $this->getLogger()->info('No build.xml phing file find in root directory!');
+            $this->getLogger()->error('No build.xml phing file find in root directory!');
         }
         $this->getLogger()->info('Project deployed successfully! [done]');
 
@@ -181,7 +216,7 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     public function getLogger()
     {
         if (!$this->logger)
-            $this->logger = $this->getServiceLocator()->get('cphpagent_logger');
+            $this->logger = $this->getServiceLocator()->get('cphp-agent.logger');
         return $this->logger;
     }
 
