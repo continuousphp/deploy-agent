@@ -1,11 +1,11 @@
 <?php
 
-namespace CphpAgentTest\Service;
+namespace CphpAgentTest\Api;
 
-use CphpAgent\Service\ApiKeyManager;
+use CphpAgent\Api\KeyManager;
 use PHPUnit_Framework_TestCase;
 
-class ApiKeyManagerTest extends PHPUnit_Framework_TestCase
+class KeyManagerTest extends PHPUnit_Framework_TestCase
 {
     private $apikey;
     protected function setUp()
@@ -17,22 +17,24 @@ class ApiKeyManagerTest extends PHPUnit_Framework_TestCase
 
     public function testConstruction()
     {
-        $keyManager = new ApiKeyManager($this->apikey);
+        $keyManager = new KeyManager();
+        $keyManager->generate($this->apikey);
         $hash = $keyManager->getHash();
+
         $this->assertFalse(is_null($hash));
         $this->assertTrue(is_string($hash));
     }
 
     public function testVerify()
     {
-        $keyManager = new ApiKeyManager($this->apikey);
+        $keyManager = new KeyManager($this->apikey);
         $hash = $keyManager->getHash();
         $this->assertTrue($keyManager->verify($hash));
     }
 
     public function testVerifyNotCorrect()
     {
-        $keyManager = new ApiKeyManager($this->apikey);
+        $keyManager = new KeyManager($this->apikey);
         $hash = $keyManager->getHash();
         $last = substr($hash,-1);
         if($last != 'a'){

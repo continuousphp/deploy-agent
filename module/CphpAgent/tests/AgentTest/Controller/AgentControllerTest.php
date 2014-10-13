@@ -54,20 +54,6 @@ class AgentControllerTest extends AbstractHttpControllerTestCase
     public function testIndexActionCanBeAccessed()
     {
 
-        $deploymentTableMock = $this->getMockBuilder('CphpAgent\Model\DeploymentTable')
-            ->disableOriginalConstructor()
-//            ->setMethods(array('fetchAll'))
-            ->getMock();
-
-        $deploymentTableMock->expects($this->once())
-            ->method('fetchAll')
-            ->will($this->returnValue(array()));
-
-        $serviceManager = $this->getApplicationServiceLocator();
-        $serviceManager->setAllowOverride(true);
-        $serviceManager->setService('CphpAgent\Model\DeploymentTable', $deploymentTableMock);
-//        var_dump($serviceManager->get('CphpAgent\Model\DeploymentTable'));exit;
-
         $this->dispatch('/');
         $this->assertResponseStatusCode(200);
     }

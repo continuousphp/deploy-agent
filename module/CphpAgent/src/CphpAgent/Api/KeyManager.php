@@ -36,9 +36,9 @@ class KeyManager {
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setSalt($this->generateSalt(Bcrypt::MIN_SALT_SIZE));
-        $this->hash =  $bcrypt->create($apiKey);
+        $this->setHash($bcrypt->create($apiKey));
 
-        return $this->hash;
+        return $this->getHash();
     }
 
     /**
@@ -50,6 +50,15 @@ class KeyManager {
     {
         return $this->hash;
     }
+
+    /**
+     * @param string $hash
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+    }
+
 
     /**
      * Check if hash is correct
