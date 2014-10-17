@@ -37,7 +37,7 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     {
         // @todo: options function or object
         if (!isset($config->projects->$project)){
-            $this->getLogger()->info('### THIS PROJECT DOESN\'T EXIST IN CONFIG FILE! ###');
+            $this->getLogger()->info('### ' . $project . ' PROJECT DOESN\'T EXIST IN CONFIG FILE! ###');
             return;
         }
 
