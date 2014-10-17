@@ -36,8 +36,10 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     public function deploy($buildId, $packageUrl, $project, $config)
     {
         // @todo: options function or object
-//        if (!array_key_exists($project, $config->project))
-//            return;
+        if (!array_key_exists($project, $config->projects)){
+            $this->getLogger()->info('### THIS PROJECT DOESN\'T EXIST IN CONFIG FILE! ###');
+            return;
+        }
 
         $projectConfig = $config->projects->{$project};
         $projectFolder = $projectConfig->folder;
