@@ -5,11 +5,13 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 class DoctrineEntityService implements
     ServiceManagerAwareInterface
 {
+    use ServiceLocatorAwareTrait;
+
     /** @var **/
     protected $serviceManager;
     protected $eventManager;
@@ -72,11 +74,23 @@ class DoctrineEntityService implements
         return $this;
     }
 
+
     /**
+     * Get entity manager
+     *
      * @return EntityManager
+     * @throws Exception
      */
     public function getEntityManager()
     {
+        if (!$this->entityManager) {
+            if ($this->getServiceLocator()->has('entity_manager')) {
+                $this->setEntityManager($this->getServiceLocator()->get('entity_manager'));
+            } else {
+                throw new Exception('no service entity manager set');
+            }
+        }
+
         return $this->entityManager;
     }
 

@@ -15,6 +15,14 @@ use SebastianBergmann\Exporter\Exception;
 use CphpAgent\Deploy\Adapter\Tarball;
 use CphpAgent\Api\KeyManager;
 
+/**
+ * Class DeployManager
+ *
+ * @package CphpAgent\Service
+ * @author Daniel Leivas <daniel@dasmuse.com>
+ * @copyright Copyright (c) continuousphp - All rights reserved
+ * @license http://opensource.org/licenses/BSD-3-Clause
+ */
 class DeployManager extends EventProvider implements ServiceLocatorAwareInterface, LoggerAwareInterface
 {
     use ServiceLocatorAwareTrait, LoggerAwareTrait;
@@ -169,7 +177,7 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     private function storeBuild($buildId){
         $buildMapper = $this->getServiceLocator()->get('cphp-agent.mapper.build');
         $data = [
-            'name' => $buildId,
+            'path' => $buildId,
             'date' => new \DateTime('now'),
         ];
         $build = new \CphpAgent\Entity\Build();

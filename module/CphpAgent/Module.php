@@ -36,9 +36,13 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
 
     public function getServiceConfig()
     {
-        return array(
-
-        );
+        return [
+            'factories' => [
+                'cphp-agent.service.auth' => function ($serviceManager) {
+                    return $serviceManager->get('doctrine.authenticationservice.orm_default');
+                }
+            ]
+        ];
     }
 
     public function getConfig()

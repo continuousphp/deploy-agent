@@ -29,7 +29,7 @@ class Build extends EntityAbstract {
      * @var string
      * @ORM\Column(type="string", length=145, nullable=false)
      */
-    private $name;
+    private $path;
 
     /**
      * @var string
@@ -37,10 +37,10 @@ class Build extends EntityAbstract {
      */
     private $date;
 
-    /**
-     * @var Project
-     * @ORM\ManyToOne(targetEntity="\CphpAgent\Entity\Project", inversedBy="builds", cascade={"persist","remove","detach","merge","refresh"})
-     */
+//    /**
+//     * @var Project
+//     * @ORM\ManyToOne(targetEntity="\CphpAgent\Entity\Project", inversedBy="builds", cascade={"persist","remove","detach","merge","refresh"})
+//     */
 //    private $project;
 
     /**
@@ -60,19 +60,19 @@ class Build extends EntityAbstract {
     }
 
     /**
-     * @param string $name
+     * @param string $path
      */
-    public function setName($name)
+    public function setPath($path)
     {
-        $this->name = $name;
+        $this->path = $path;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getPath()
     {
-        return $this->name;
+        return $this->path;
     }
 
     /**
@@ -94,17 +94,17 @@ class Build extends EntityAbstract {
     /**
      * @param \CphpAgent\Entity\Project $project
      */
-    public function setProject($project)
-    {
-        $this->project = $project;
-    }
-
-    /**
-     * @return \CphpAgent\Entity\Project
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
+//    public function setProject($project)
+//    {
+//        $this->project = $project;
+//    }
+//
+//    /**
+//     * @return \CphpAgent\Entity\Project
+//     */
+//    public function getProject()
+//    {
+//        return $this->project;
+//    }
 
 } 

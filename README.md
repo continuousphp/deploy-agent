@@ -25,10 +25,19 @@ You can get started in minutes by installing this Agent through Composer in your
 
     ## Install the deploy agent with composer
 
-    ./composer.phar up
+        ./composer.phar up
 
     ## Allow symlink creation
 
-    Add this line in your vhost:
+        Add this line in your vhost:
 
-    Options +FollowSymLinks +SymLinksIfOwnerMatch
+        Options +FollowSymLinks +SymLinksIfOwnerMatch
+
+    ## Install database
+
+        Set rights on db file :
+        chmod 755 data/db/deploy.sqlite
+
+        Launch the doctrine command:
+        php vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:update --dump-sql
+

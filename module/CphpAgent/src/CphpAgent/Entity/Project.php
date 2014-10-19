@@ -35,12 +35,12 @@ class Project {
      */
     private $updated;
 
-    /**
-     * @var Build
-     * @ORM\OneToMany(targetEntity="\CphpAgent\Entity\Build",mappedBy="project", cascade={"persist","remove","detach","merge","refresh"})
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
-     */
-    protected $builds;
+//    /**
+//     * @var Build
+//     * @ORM\OneToMany(targetEntity="\CphpAgent\Entity\Build",mappedBy="project", cascade={"persist","remove","detach","merge","refresh"})
+//     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
+//     */
+//    protected $builds;
 
 
     /**
