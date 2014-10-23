@@ -3,6 +3,7 @@
 namespace CphpAgent\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Stdlib\DateTime;
 
 /**
  * Build Entity
@@ -68,9 +69,9 @@ class User extends EntityAbstract {
     /**
      * @param \DateTime $created
      */
-    public function setCreated($created)
+    public function setCreated()
     {
-        $this->created = $created;
+        $this->created = new \DateTime('now');
     }
 
     /**

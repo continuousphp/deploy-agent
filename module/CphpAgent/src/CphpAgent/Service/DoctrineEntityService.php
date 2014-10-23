@@ -1,14 +1,13 @@
 <?php
 namespace CphpAgent\Service;
 
-use Zend\ServiceManager\ServiceManagerAwareInterface;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class DoctrineEntityService implements
-    ServiceManagerAwareInterface
+class DoctrineEntityService implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
@@ -64,6 +63,11 @@ class DoctrineEntityService implements
         return $this;
     }
 
+    public function getEntityRepository()
+    {
+        return $this->entityRepository;
+    }
+
     /**
      * @param EntityManager $entityManager
      * @return \CphpAgent\Service\DoctrineEntityService
@@ -73,7 +77,6 @@ class DoctrineEntityService implements
         $this->entityManager = $entityManager;
         return $this;
     }
-
 
     /**
      * Get entity manager

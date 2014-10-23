@@ -58,7 +58,7 @@ return [
                     'identity_class' => 'CphpAgent\Entity\User',
                     'identity_property' => 'username',
                     'credential_property' => 'password',
-//                    'credential_callable' => 'CphpAgent\Service\User::verifyHashedPassword'
+                    'credential_callable' => 'CphpAgent\Service\User::verifyHashedPassword'
                 ],
         ],
     ],
@@ -83,6 +83,16 @@ return [
                             'defaults' => [
                                 'controller' => 'CphpAgent\Controller\Admin',
                                 'action'     => 'login',
+                            ],
+                        ],
+                    ],
+                    'logout' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route' => '/logout',
+                            'defaults' => [
+                                'controller' => 'CphpAgent\Controller\Admin',
+                                'action'     => 'logout',
                             ],
                         ],
                     ],

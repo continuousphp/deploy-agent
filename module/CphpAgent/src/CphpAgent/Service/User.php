@@ -25,14 +25,17 @@ use CphpAgent\Entity;
  */
 class User extends DoctrineEntityService
 {
-    /***
-     * Save user
+    /**
+     * Get the User entity repository
      *
-     * @param \CphpAgent\Entity\User $user The user object
-     * @return Entity
+     * @return mixed User repository
      */
-    public function store(\CphpAgent\Entity\User $user){
-        return $this->persist($user);
+    public function getEntityRepository()
+    {
+        if (null === $this->entityRepository) {
+            $this->setEntityRepository($this->getEntityManager()->getRepository('CphpAgent\Entity\User'));
+        }
+        return $this->entityRepository;
     }
 
     /**
@@ -41,13 +44,12 @@ class User extends DoctrineEntityService
      * @param  \CphpAgent\Entity\User   $user The identity object
      * @param  string                   $password  Password provided by the user, to verify
      *
-     * @return boolean      If the password was correct or not
+     * @return boolean  If the password was correct or not
      */
     public static function verifyHashedPassword($user, $password)
     {
         $bcrypt = new Bcrypt();
         return $bcrypt->verify($password, $user->getPassword());
     }
-
 
 }

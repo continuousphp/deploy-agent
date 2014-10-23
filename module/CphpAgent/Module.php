@@ -12,11 +12,28 @@ use CphpAgent\Config\ConfigAwareInterface;
 
 class Module implements ConfigProviderInterface, ServiceProviderInterface
 {
+
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'authpreDispatch'), 1);
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+    }
+
+    public function authPreDispatch($event) {
+        $authService = $event->getApplication()->getServiceManager()->get('cphp-agent.service.auth');
+        $action = $event->getRouteMatch()->getParam('action');
+        if (!$authService->hasIdentity() && $action !== 'login'){
+            $url = $event->getRouter()->assemble(array('action' => 'login'), array('name' => 'zfcadmin/login'));
+
+            $response = $event->getResponse();
+            $response->getHeaders()->addHeaderLine('Location', $url);
+            $response->setStatusCode(302);
+            $response->sendHeaders();
+
+            $event->stopPropagation(true);
+        }
     }
 
     public function getControllerConfig()

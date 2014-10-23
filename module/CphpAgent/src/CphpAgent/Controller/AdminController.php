@@ -8,19 +8,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use CphpAgent\Config\ConfigAwareInterface;
 use Zend\View\Model\ViewModel;
+use CphpAgent\Service\User;
 
 
 class AdminController extends AbstractActionController implements ConfigAwareInterface, ServiceLocatorAwareInterface
 {
     /** @var  Config */
     protected $config;
-
-    public function __construct()
-    {
-//        $authService = $this->getServiceLocator()->get('cphp-agent.service.auth');
-//        if ($authService->hasIdentity())
-//            $this->redirect()->toRoute('zfcadmin/deployments');
-    }
 
     public function indexAction()
     {
@@ -34,7 +28,8 @@ class AdminController extends AbstractActionController implements ConfigAwareInt
             return $this->redirect()->toRoute('zfcadmin/deployments');
 
         $data = $this->getRequest()->getPost();
-        if ($this->getRequest()->isPost()) {
+        if ($this->getRequest()->isPost() && (!empty($data['password']) && !empty($data['username']))) {
+
             $adapter = $authService->getAdapter();
             $adapter->setIdentityValue($data['username']);
             $adapter->setCredentialValue($data['password']);
@@ -52,6 +47,13 @@ class AdminController extends AbstractActionController implements ConfigAwareInt
         ));
     }
 
+    public function logoutAction()
+    {
+        $authService = $this->getServiceLocator()->get('cphp-agent.service.auth');
+        $authService->clearIdentity();
+        return $this->redirect()->toRoute('zfcadmin/deployments');
+    }
+
     public function deploymentsAction()
     {
         $buildMapper = $this->getServiceLocator()->get('cphp-agent.mapper.build');
@@ -65,19 +67,19 @@ class AdminController extends AbstractActionController implements ConfigAwareInt
         $error='';
         $data = $this->getRequest()->getPost();
         try {
-            if ($this->getRequest()->isPost() && !empty($data)) {
-                $data['created'] = date('Y/m/d H:i:s');
-                $data['updated'] = date('Y/m/d H:i:s');
+            if ($this->getRequest()->isPost() && (!empty($data['password']) && !empty($data['username']))) {
 
-//                $bcrypt = new Bcrypt();
-//                $data['password'] = $bcrypt->create($data['password']);
-                var_dump($data->toArray());
-
+                $crypt = new Bcrypt();
+                $data['password'] = $crypt->create($data['password']);
                 $userService = $this->getServiceLocator()->get('cphp-agent.service.user');
+
                 $user = new \CphpAgent\Entity\User();
                 $user->exchangeArray($data->toArray());
-                $userService->store($user);
-                var_dump($userService->findAll());
+                $user->setCreated();
+                $user->setUpdated(new \DateTime('now'));
+                $userService->persist($user);
+            }else{
+                $error = 'Fields cannot be empty';
             }
         } catch (Exception $e) {
             $error = $e->getMessage();
