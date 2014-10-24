@@ -18,6 +18,7 @@ class AdminController extends AbstractActionController implements ConfigAwareInt
 
     public function indexAction()
     {
+        return $this->redirect()->toRoute('zfcadmin/login');
     }
 
     public function loginAction()

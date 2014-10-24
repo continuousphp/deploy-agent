@@ -10,7 +10,7 @@ use Zend\Mvc\Router\RouteMatch;
 use Agent\Controller\AgentController as Controller;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
-class AgentControllerTest extends AbstractHttpControllerTestCase
+class AdminControllerTest extends AbstractHttpControllerTestCase
 {
     /**
      * @var Controller $controller
@@ -53,8 +53,7 @@ class AgentControllerTest extends AbstractHttpControllerTestCase
 
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/');
+        $this->dispatch('/admin/');
         $this->assertResponseStatusCode(302);
     }
-
 }

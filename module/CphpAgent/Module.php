@@ -23,7 +23,11 @@ class Module implements ConfigProviderInterface, ServiceProviderInterface
 
     public function authPreDispatch($event) {
         $authService = $event->getApplication()->getServiceManager()->get('cphp-agent.service.auth');
+        $ctrl = $event->getRouteMatch()->getParam('controller');
         $action = $event->getRouteMatch()->getParam('action');
+
+        if ($ctrl !== 'CphpAgent\Controller\Admin') return;
+
         if (!$authService->hasIdentity() && $action !== 'login'){
             $url = $event->getRouter()->assemble(array('action' => 'login'), array('name' => 'zfcadmin/login'));
 

@@ -48,8 +48,8 @@ class User extends DoctrineEntityService
      */
     public static function verifyHashedPassword($user, $password)
     {
-        $bcrypt = new Bcrypt();
-        return $bcrypt->verify($password, $user->getPassword());
+        $crypt = new Bcrypt();
+        return $crypt->verify($password, $user->getPassword());
     }
 
 }

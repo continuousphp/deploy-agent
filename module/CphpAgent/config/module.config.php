@@ -76,6 +76,16 @@ return [
             ],
             'zfcadmin' => [
                 'child_routes' => [
+                    'index' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route' => '/',
+                            'defaults' => [
+                                'controller' => 'CphpAgent\Controller\Admin',
+                                'action'     => 'index',
+                            ],
+                        ],
+                    ],
                     'login' => [
                         'type' => 'literal',
                         'options' => [
