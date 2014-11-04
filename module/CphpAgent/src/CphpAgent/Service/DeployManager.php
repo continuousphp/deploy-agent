@@ -58,7 +58,7 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
             'apikey' => $keyManager->getHash(),
             'project_name' => $project
         );
-        $url = $packageUrl . '?' . http_build_query($params);
+        $url = $packageUrl . '&' . http_build_query($params);
 
         $this->getLogger()->info('######## START DEPLOYMENT ########');
         $buildFolder = $config->buildPath . 'build_' . $buildId . '/';
@@ -106,8 +106,14 @@ class DeployManager extends EventProvider implements ServiceLocatorAwareInterfac
     private function retrieve($stream)
     {
         $this->getLogger()->info('Downloading tarball...');
-        $this->getTarball()->createFromResponseStream($stream);
-        $this->getLogger()->info('Downloaded [done]');
+
+        try{
+            $this->getTarball()->createFromResponseStream($stream);
+            $this->getLogger()->info('Downloaded [done]');
+        }catch (Exception $e){
+            $this->getLogger()->info('Downloaded failed.');
+            throw new Exception('Download failed.');
+        }
 
         $this->getLogger()->info('Extracting...');
         if (!$extracted = $this->getTarball()->extract()) {

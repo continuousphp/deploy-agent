@@ -59,7 +59,6 @@ class Tarball
         ));
         $client->setStream();
         $stream = $client->send();
-
         return $stream;
     }
 
