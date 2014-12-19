@@ -8,7 +8,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use CphpAgent\Config\ConfigAwareInterface;
 use Zend\View\Model\ViewModel;
-use CphpAgent\Service\User;
 
 
 class AdminController extends AbstractActionController implements ConfigAwareInterface, ServiceLocatorAwareInterface
@@ -43,7 +42,9 @@ class AdminController extends AbstractActionController implements ConfigAwareInt
             }
         }
 
+        $form = $this->getServiceLocator()->get('cphp-agent.login.form');
         return new ViewModel(array(
+            'form' => $form,
             'error' => $error,
         ));
     }

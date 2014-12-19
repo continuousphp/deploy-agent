@@ -15,14 +15,16 @@ return [
             ],
         'invokables' =>
             [
+                'CphpAgent\Form\Login'      => 'CphpAgent\Form\Login',
                 'cphp-agent.service.deploy-manager' => 'CphpAgent\Service\DeployManager',
-                'cphp-agent.service.user' => 'CphpAgent\Service\User',
-                'cphp-agent.mapper.build' => 'CphpAgent\Mapper\Build',
-                'cphp-agent.mapper.user' => 'CphpAgent\Mapper\User',
+                'cphp-agent.service.user'   => 'CphpAgent\Service\User',
+                'cphp-agent.mapper.build'   => 'CphpAgent\Mapper\Build',
+                'cphp-agent.mapper.user'    => 'CphpAgent\Mapper\User',
             ],
         'factories' =>
             [
                 'cphp-agent.logger' => 'CphpAgent\Factory\AgentLoggerFactory',
+                'cphp-agent.login.form' => 'CphpAgent\Factory\Form\LoginFormFactory',
             ],
         'abstract_factories' =>
             [
