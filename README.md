@@ -2,7 +2,7 @@ deploy-agent
 ============
 
 Master :  
-[![Build Status](https://status.continuousphp.com/git-hub/continuousphp/deploy-agent?token=8a3ddb18-d8aa-45af-8e5a-718a7a668dba&branch=master)](https://continuousphp.com/git-hub/continuousphp/deploy-agent)
+[![Build Status](https://status.continuousphp.com/git-hub/continuousphp/deploy-agent?token=8a3ddb18-d8aa-45af-8e5a-718a7a668dba&branch=master)](https://continuousphp.com/git-hub/continuousphp/deploy-agent)  
 Develop :  
 [![continuousphp](https://status.continuousphp.com/git-hub/continuousphp/deploy-agent?token=8a3ddb18-d8aa-45af-8e5a-718a7a668dba&branch=develop)](https://continuousphp.com/git-hub/continuousphp/deploy-agent)
 
