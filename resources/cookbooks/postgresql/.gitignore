@@ -1,0 +1,12 @@
+*.tgz
+*.tar.gz
+vendor/bundle
+.bundle
+.DS_Store
+build/*
+tmp/
+Berksfile.lock
+Gemfile.lock
+.coverage
+.kitchen/
+.kitchen.local.yml

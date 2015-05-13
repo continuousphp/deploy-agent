@@ -1,0 +1,28 @@
+language: ruby
+bundler_args: --jobs 4 --retry 3 --without integration
+rvm:
+- 2.0.0
+- 2.1
+- 2.2
+cache: bundler
+sudo: false
+before_script:
+- "gem install bundler-audit --no-rdoc --no-ri && bundle-audit update"
+script:
+- bundle-audit check --ignore OSVDB-117461
+- bundle exec rake license_finder
+- bundle exec rake rubocop
+- bundle exec rake foodcritic
+- bundle exec rake chefspec
+- bundle exec rake kitchen:all
+env:
+  matrix:
+  - CHEF_VERSION: "11.18"
+  - CHEF_VERSION: "12.0"
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/c8194b5cea25c6a61831
+    on_success: change
+    on_failure: always
+    on_start: false
