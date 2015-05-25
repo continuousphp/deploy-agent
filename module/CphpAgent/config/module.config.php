@@ -1,153 +1,112 @@
 <?php
 
-return [
-    'controllers' => [
+return
+[
+    'controllers' =>
+    [
         'invokables' => 
-            [
-                'CphpAgent\Controller\Agent' => 'CphpAgent\Controller\AgentController',
-                'CphpAgent\Controller\Admin' => 'CphpAgent\Controller\AdminController'
-            ]
+        [
+            'CphpAgent\Index' => 'CphpAgent\Controller\IndexController'
+        ]
     ],
-    'service_manager' => [
+    'service_manager' =>
+    [
         'aliases' =>
-            [
-                'entity_manager' => 'Doctrine\ORM\EntityManager',
-            ],
+        [
+            'entity_manager' => 'Doctrine\ORM\EntityManager',
+        ],
         'invokables' =>
-            [
-                'CphpAgent\Form\Login'      => 'CphpAgent\Form\Login',
-                'cphp-agent.service.deploy-manager' => 'CphpAgent\Service\DeployManager',
-                'cphp-agent.service.user'   => 'CphpAgent\Service\User',
-                'cphp-agent.mapper.build'   => 'CphpAgent\Mapper\Build',
-                'cphp-agent.mapper.user'    => 'CphpAgent\Mapper\User',
-            ],
+        [
+            'CphpAgent\Form\Login'      => 'CphpAgent\Form\Login',
+            'cphp-agent.service.deploy-manager' => 'CphpAgent\Service\DeployManager',
+            'cphp-agent.service.user'   => 'CphpAgent\Service\User',
+            'cphp-agent.mapper.build'   => 'CphpAgent\Mapper\Build',
+            'cphp-agent.mapper.user'    => 'CphpAgent\Mapper\User',
+        ],
         'factories' =>
-            [
-                'cphp-agent.logger' => 'CphpAgent\Factory\AgentLoggerFactory',
-                'cphp-agent.login.form' => 'CphpAgent\Factory\Form\LoginFormFactory',
-            ],
+        [
+            'cphp-agent.logger' => 'CphpAgent\Factory\AgentLoggerFactory',
+            'cphp-agent.login.form' => 'CphpAgent\Factory\Form\LoginFormFactory',
+        ],
         'abstract_factories' =>
-            [
-                'CphpAgent\Mapper\AbstractFactory',
-                'CphpAgent\Service\AbstractFactory',
-            ],
+        [
+            'CphpAgent\Mapper\AbstractFactory',
+            'CphpAgent\Service\AbstractFactory',
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+            'Zend\Db\Adapter\AdapterAbstractServiceFactory',
+            'Zend\Log\LoggerAbstractServiceFactory',
+        ],
         'initializers' =>
-            [
-                'CphpAgent\Mapper\Initializer',
-            ],
+        [
+            'CphpAgent\Mapper\Initializer',
+        ],
     ],
-    'doctrine' => [
-        'driver' => [
-            'cphpagent_driver' => [
-                    'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                    'cache' => 'array',
-                    'paths' =>
-                        [
-                            dirname(__DIR__) . '/src/CphpAgent/Entity',
-                        ]
+    'doctrine' =>
+    [
+        'driver' =>
+        [
+            'cphpagent_driver' =>
+            [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [ dirname(__DIR__) . '/src/CphpAgent/Entity' ]
             ],
-            'orm_default' => [
-                    'drivers' =>
-                        [
-                            'CphpAgent\Entity' => 'cphpagent_driver',
-                        ]
+            'orm_default' =>
+            [
+                'drivers' =>
+                [
+                    'CphpAgent\Entity' => 'cphpagent_driver',
+                ]
             ]
         ],
-        'authentication' => [
+        'authentication' =>
+        [
             'orm_default' =>
-                [
-                    'object_manager' => 'Doctrine\ORM\EntityManager',
-                    'identity_class' => 'CphpAgent\Entity\User',
-                    'identity_property' => 'username',
-                    'credential_property' => 'password',
-                    'credential_callable' => 'CphpAgent\Service\User::verifyHashedPassword'
-                ],
+            [
+                'object_manager' => 'Doctrine\ORM\EntityManager',
+                'identity_class' => 'CphpAgent\Entity\User',
+                'identity_property' => 'username',
+                'credential_property' => 'password',
+                'credential_callable' => 'CphpAgent\Service\User::verifyHashedPassword'
+            ],
         ],
     ],
-    'router' => [
-        'routes' => [
-            'home' => [
-                'type'    => 'segment',
-                'options' => [
-                    'route'    => '/[/:action]',
-                    'defaults' => [
-                        'controller' => 'CphpAgent\Controller\Agent',
+    'router' =>
+    [
+        'routes' =>
+        [
+            'home' =>
+            [
+                'type'    => 'Literal',
+                'options' =>
+                [
+                    'route'    => '/',
+                    'defaults' =>
+                    [
+                        'controller' => 'CphpAgent\Index',
                         'action'     => 'index',
                     ],
                 ],
             ],
-            'zfcadmin' => [
-                'child_routes' => [
-                    'index' => [
-                        'type' => 'literal',
-                        'options' => [
-                            'route' => '/',
-                            'defaults' => [
-                                'controller' => 'CphpAgent\Controller\Admin',
-                                'action'     => 'index',
-                            ],
-                        ],
-                    ],
-                    'login' => [
-                        'type' => 'literal',
-                        'options' => [
-                            'route' => '/login',
-                            'defaults' => [
-                                'controller' => 'CphpAgent\Controller\Admin',
-                                'action'     => 'login',
-                            ],
-                        ],
-                    ],
-                    'logout' => [
-                        'type' => 'literal',
-                        'options' => [
-                            'route' => '/logout',
-                            'defaults' => [
-                                'controller' => 'CphpAgent\Controller\Admin',
-                                'action'     => 'logout',
-                            ],
-                        ],
-                    ],
-                    'deployments' => [
-                        'type' => 'literal',
-                        'options' => [
-                            'route' => '/deployments',
-                            'defaults' => [
-                                'controller' => 'CphpAgent\Controller\Admin',
-                                'action'     => 'deployments',
-                            ],
-                        ],
-                    ],
-                    'add-user' => [
-                        'type' => 'literal',
-                        'options' => [
-                            'route' => '/add-user',
-                            'defaults' => [
-                                'controller' => 'CphpAgent\Controller\Admin',
-                                'action'     => 'addUser',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
         ],
     ],
-    'view_manager' => [
+    'view_manager' =>
+    [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
         'template_map' =>
-            [
-                'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-                'agent/agent/index' => __DIR__ . '/../view/agent/agent/index.phtml',
-                'error/404'               => __DIR__ . '/../view/error/404.phtml',
-                'error/index'             => __DIR__ . '/../view/error/index.phtml',
-            ],
+        [
+            'layout/layout'     => __DIR__ . '/../view/layout/layout.phtml',
+            'cphp-agent/index/index' => __DIR__ . '/../view/cphp-agent/index/index.phtml',
+            'error/404'         => __DIR__ . '/../view/error/404.phtml',
+            'error/index'       => __DIR__ . '/../view/error/index.phtml',
+        ],
         'template_path_stack' =>
-            [
-                'CphpAgent' => __DIR__ . '/../view',
-            ],
+        [
+            'CphpAgent' => __DIR__ . '/../view',
+        ],
     ],
 ];

@@ -9,8 +9,8 @@ cookbook "git"
 cookbook "runit"
 
 # Local Cookbooks
-cookbook "apache2", path: 'resources/cookbooks/apache2'
-cookbook "postfix", path: 'resources/cookbooks/postfix'
-cookbook "sandbox", path: 'resources/cookbooks/sandbox'
-cookbook "zend-server", path: 'resources/cookbooks/zend-server'
-cookbook "locale", path: 'resources/cookbooks/locale'
+cookbook "apache2", path: '.cookbooks/apache2'
+cookbook "postfix", path: '.cookbooks/postfix'
+cookbook "sandbox", path: '.cookbooks/sandbox'
+cookbook "zend-server", path: '.cookbooks/zend-server'
+cookbook "locale", path: '.cookbooks/locale'
