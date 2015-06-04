@@ -23,8 +23,8 @@ return
         ],
         'shared' =>
         [
-            'provider/continuousphp',
-            'application/application',
+            'provider/continuousphp' => false,
+            'application/application' => false,
         ]
     ],
     'router' =>
