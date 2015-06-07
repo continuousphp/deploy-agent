@@ -18,3 +18,5 @@ data/cache/*
 !data/cache/.gitkeep
 data/logs/*
 !data/logs/.gitkeep
+#data/db/*
+!data/db/.gitkeep
