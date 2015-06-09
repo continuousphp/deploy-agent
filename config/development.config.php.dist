@@ -9,7 +9,7 @@ return
     // Development time modules
     'modules' =>
     [
-        'ZFTool',
+        'ZF\\DevelopmentMode',
         'ZF\Apigility\Admin',
     ],
     // development time configuration globbing

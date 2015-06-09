@@ -9,6 +9,8 @@
  */
 
 namespace Continuous\DeployAgent\Application;
+
+use Doctrine\ORM\Mapping as ORM;
 use Continuous\DeployAgent\Destination\DestinationInterface;
 use Continuous\DeployAgent\Provider\ProviderInterface;
 
@@ -18,23 +20,34 @@ use Continuous\DeployAgent\Provider\ProviderInterface;
  * @package    Continuous\DeployAgent
  * @subpackage Application
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
+ * 
+ * @ORM\Entity
  */
 class Application implements ApplicationInterface
 {
     /**
+     * The application name
+     * 
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     * 
      * @var string
      */
     protected $name;
 
     /**
-     * @var DestinationInterface
-     */
-    protected $endPoint;
-    
-    /**
+     * @ORM\OneToOne(targetEntity="Continuous\DeployAgent\Provider\AbstractProvider", cascade={"persist"}, orphanRemoval=true)
+     * 
      * @var ProviderInterface
      */
     protected $provider;
+
+    /**
+     * @ORM\Column(type="string")
+     * 
+     * @var string
+     */
+    protected $path;
 
     /**
      * @return string
@@ -51,25 +64,6 @@ class Application implements ApplicationInterface
     public function setName($name)
     {
         $this->name = $name;
-        
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEndPoint()
-    {
-        return $this->endPoint;
-    }
-
-    /**
-     * @param DestinationInterface $endPoint
-     * @return $this
-     */
-    public function setEndPoint(DestinationInterface $endPoint)
-    {
-        $this->endPoint = $endPoint;
         
         return $this;
     }
@@ -92,6 +86,30 @@ class Application implements ApplicationInterface
         
         return $this;
     }
-    
-    
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     * @return $this
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndPoint()
+    {
+    }
 }

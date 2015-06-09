@@ -45,8 +45,25 @@ class Module implements
     {
         return
             [
+                'Application management:',
                 'list applications' => 'List all registered applications',
-                'add application' => 'register a new application',
+                'add application [--provider=] [--token=] [--repository-provider=] [--repository=] '
+                . '[--pipeline=] [--name=] [--path=]' => 'register a new application',
+                ['--provider=PROVIDER', 'The provider to use (ie: continuousphp)'], 
+                ['--token=TOKEN', 'A valid token to consume the provider API'],
+                [
+                    '--repository-provider=REPOSITORY_PROVIDER',
+                    'The repository provider to use (ie: git-hub, bitbucket...)'
+                    . PHP_EOL . '(for continuousphp only)'
+                ],
+                ['--repository=REPOSITORY', 'The repository key to use (ie: continuousphp/deploy-agent)'], 
+                [
+                    '--pipeline=PIPELINE',
+                    'The pipeline to use (ie: refs/heads/master)'
+                    . PHP_EOL . '(for continuousphp only)'
+                ],
+                ['--name=NAME', 'The name of the application'],
+                ['--path=PATH' => 'The destination path']
             ];
     }
 

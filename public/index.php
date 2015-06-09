@@ -28,10 +28,10 @@ if (!defined('APPLICATION_PATH')) {
     define('APPLICATION_PATH', realpath(__DIR__ . '/../'));
 }
 
-$appConfig = include APPLICATION_PATH . '/config/application.config.php';
+$appConfig = include 'config/application.config.php';
 
-if (file_exists(APPLICATION_PATH . '/config/development.config.php')) {
-    $appConfig = Zend\Stdlib\ArrayUtils::merge($appConfig, include APPLICATION_PATH . '/config/development.config.php');
+if (file_exists('config/development.config.php')) {
+    $appConfig = Zend\Stdlib\ArrayUtils::merge($appConfig, include 'config/development.config.php');
 }
 
 // Some OS/Web Server combinations do not glob properly for paths unless they
@@ -40,7 +40,7 @@ if (file_exists(APPLICATION_PATH . '/config/development.config.php')) {
 // globbing will work cross-platform.
 if (isset($appConfig['module_listener_options']['config_glob_paths'])) {
     foreach ($appConfig['module_listener_options']['config_glob_paths'] as $index => $path) {
-        if ($path !== 'config/autoload/{,*.}{global,local}.php') {
+        if ($path !== 'config/autoload/{,*.}{global,local,test}.php') {
             continue;
         }
         $appConfig['module_listener_options']['config_glob_paths'][$index] = getcwd() . '/' . $path;

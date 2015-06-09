@@ -9,6 +9,9 @@
  */
 
 namespace Continuous\DeployAgent\Provider;
+
+use Doctrine\ORM\Mapping as ORM;
+use Reprovinci\DoctrineEncrypt\Configuration\Encrypted;
 use Continuous\Sdk\Service;
 
 /**
@@ -17,10 +20,14 @@ use Continuous\Sdk\Service;
  * @package    Continuous\DeployAgent
  * @subpackage Provider
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
+ * 
+ * @ORM\Entity
  */
-class Continuousphp implements ProviderInterface
+class Continuousphp extends AbstractProvider
 {
     /**
+     * @ORM\Column(type="string")
+     * @Encrypted
      * @var string
      */
     protected $token;
@@ -31,16 +38,19 @@ class Continuousphp implements ProviderInterface
     protected $client;
 
     /**
+     * @ORM\Column(type="string")
      * @var string
      */
     protected $repositoryProvider;
 
     /**
+     * @ORM\Column(type="string")
      * @var string
      */
     protected $repository;
 
     /**
+     * @ORM\Column(type="string")
      * @var string
      */
     protected $reference;

@@ -20,12 +20,49 @@ return
         [
             'provider/continuousphp' => 'Continuous\\DeployAgent\\Provider\\Continuousphp',
             'application/application' => 'Continuous\\DeployAgent\\Application\\Application',
+            'application/application-manager' => 'Continuous\\DeployAgent\\Application\\ApplicationManager',
+            'doctrine.naming_strategy.underscore' => 'Doctrine\\ORM\\Mapping\\UnderscoreNamingStrategy'
         ],
         'shared' =>
         [
             'provider/continuousphp' => false,
             'application/application' => false,
+        ],
+        'initializers' =>
+        [
+            'Continuous\\DeployAgent\\EntityManagerInitializer'
         ]
+    ],
+    'doctrine' =>
+    [
+        'driver' =>
+        [
+            'agent_driver' =>
+            [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [ dirname(__DIR__) . '/src' ]
+            ],
+            'orm_default' =>
+            [
+                'drivers' =>
+                [
+                    'Continuous\DeployAgent' => 'agent_driver',
+                ]
+            ]
+        ],
+        'configuration' =>
+        [
+            'orm_default' =>
+                [
+                    'generate_proxies' => false,
+                    'metadata_cache' => 'array',
+                    'query_cache' => 'array',
+                    'result_cache' => 'array',
+                    'driver' => 'orm_default',
+                    'naming_strategy' => 'doctrine.naming_strategy.underscore'
+                ]
+        ],
     ],
     'router' =>
     [
@@ -68,7 +105,8 @@ return
                 [
                     'options' =>
                     [
-                        'route' => 'add application',
+                        'route' => 'add application [--provider=] [--token=] [--repository-provider=] [--repository=] '
+                                 . '[--pipeline=] [--name=] [--path=]',
                         'defaults' =>
                         [
                             'controller' => 'DeployAgent\Application',

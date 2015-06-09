@@ -44,12 +44,6 @@ interface ApplicationInterface
     public function getName();
 
     /**
-     * @param DestinationInterface $endPoint
-     * @return $this
-     */
-    public function setEndPoint(DestinationInterface $endPoint);
-
-    /**
      * @return DestinationInterface
      */
     public function getEndPoint();

@@ -6,7 +6,7 @@
  * drop this config file in it and change the values as you wish.
  */
 return [
-    'deployAgent' => [
+    'agent' => [
 
         /**
          * Destination path for your project
@@ -17,6 +17,9 @@ return [
          * Path where every are conserved during deployments
          */
         'buildPath' => '/tmp/www/deploy_agent_builds/',
+
+        /* hexadecimal key to crypt/decrypt sensitive data */
+        'hash-key' => 'f01ee0962998007d40c7ce32bfec773028785cadfa0064a467662cb87171012c',
 
         /**
          * Key/Value array for Project Name / Destination folder
