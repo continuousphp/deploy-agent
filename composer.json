@@ -22,7 +22,7 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "zendframework/zendframework": "~2.5.1",
+    "zendframework/zendframework": "~2.4.2",
     "doctrine/doctrine-orm-module": "~0.9",
     "reprovinci/doctrine-encrypt": "~3.0",
     "doctrine/migrations": "1.0.0-alpha3",
