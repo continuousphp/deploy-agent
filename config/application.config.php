@@ -6,7 +6,6 @@
  */
 return array(
     'modules' => array(
-        'BsbPhingService',
         'Continuous\\DeployAgent',
         'ZF\\Apigility',
         'ZF\\Apigility\\Provider',

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f9d864a70912b7ab150ad7063fdfec8",
+    "hash": "f31743979774932054ffbfc5d2f5d9f1",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -53,56 +53,6 @@
                 "oauth2"
             ],
             "time": "2015-05-21 20:07:03"
-        },
-        {
-            "name": "bushbaby/zf2-module-phing-service",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bushbaby/zf2-module-phing-service.git",
-                "reference": "571dc9992df02eed49cb88936bd901aff079292e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bushbaby/zf2-module-phing-service/zipball/571dc9992df02eed49cb88936bd901aff079292e",
-                "reference": "571dc9992df02eed49cb88936bd901aff079292e",
-                "shasum": ""
-            },
-            "require": {
-                "phing/phing": "~2.4,>=2.4.13",
-                "php": ">=5.3.3",
-                "zendframework/zendframework": "~2.0"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "~0.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "BsbPhingService": "src/"
-                },
-                "classmap": [
-                    "Module.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bas Kamer",
-                    "email": "bas@bushbaby.nl"
-                }
-            ],
-            "description": "Zend Framework 2 module for Phing, a PHP project build system or build tool based on Apache Ant.",
-            "homepage": "https://github.com/basz/zf2-module-phing-service",
-            "keywords": [
-                "module",
-                "phing",
-                "zf2"
-            ],
-            "time": "2014-07-04 18:00:02"
         },
         {
             "name": "continuousphp/sdk",
@@ -834,64 +784,6 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
-        },
-        {
-            "name": "doctrine/migrations",
-            "version": "v1.0.0-alpha3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/migrations.git",
-                "reference": "d2d18ef671b47a7d48fae54806adac87e82fe8e9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/d2d18ef671b47a7d48fae54806adac87e82fe8e9",
-                "reference": "d2d18ef671b47a7d48fae54806adac87e82fe8e9",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "~2.0",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "symfony/console": "2.*",
-                "symfony/yaml": "2.*"
-            },
-            "suggest": {
-                "symfony/console": "to run the migration from the console"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\DBAL\\Migrations": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.1"
-            ],
-            "authors": [
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                }
-            ],
-            "description": "Database Schema migrations using Doctrine DBAL",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "database",
-                "migrations"
-            ],
-            "time": "2015-03-22 13:09:02"
         },
         {
             "name": "doctrine/orm",
@@ -4618,7 +4510,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "doctrine/migrations": 15,
         "mikey179/vfsstream": 20,
         "zendframework/zend-developer-tools": 20
     },
