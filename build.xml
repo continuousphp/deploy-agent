@@ -10,4 +10,9 @@
         </exec>
     </target>
     
+    <target name="enable-development-mode" description="Enable development mode configuration">
+        <copy file="${project.basedir}/config/development.config.php.dist"
+              tofile="${project.basedir}/config/development.config.php" />
+    </target>
+    
 </project>
