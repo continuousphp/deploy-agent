@@ -46,13 +46,13 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
             unlink('data/db/test.db');
         }
 
-        $appConfig = include 'config/application.config.php';
+        $appConfig = require 'config/application.config.php';
 
         if (file_exists('config/development.config.php')) {
-            $appConfig = \Zend\Stdlib\ArrayUtils::merge($appConfig, include 'config/development.config.php');
+            $appConfig = \Zend\Stdlib\ArrayUtils::merge($appConfig, require 'config/development.config.php');
         }
         
-        self::$application = Application::init($appConfig)->bootstrap();
+        self::$application = Application::init($appConfig);
     }
     
     /**
