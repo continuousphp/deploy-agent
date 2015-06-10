@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f31743979774932054ffbfc5d2f5d9f1",
+    "hash": "289d7b9d9034ac81385a479fa051fbbd",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -53,6 +53,56 @@
                 "oauth2"
             ],
             "time": "2015-05-21 20:07:03"
+        },
+        {
+            "name": "bushbaby/zf2-module-phing-service",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bushbaby/zf2-module-phing-service.git",
+                "reference": "571dc9992df02eed49cb88936bd901aff079292e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bushbaby/zf2-module-phing-service/zipball/571dc9992df02eed49cb88936bd901aff079292e",
+                "reference": "571dc9992df02eed49cb88936bd901aff079292e",
+                "shasum": ""
+            },
+            "require": {
+                "phing/phing": "~2.4,>=2.4.13",
+                "php": ">=5.3.3",
+                "zendframework/zendframework": "~2.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "~0.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BsbPhingService": "src/"
+                },
+                "classmap": [
+                    "Module.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bas Kamer",
+                    "email": "bas@bushbaby.nl"
+                }
+            ],
+            "description": "Zend Framework 2 module for Phing, a PHP project build system or build tool based on Apache Ant.",
+            "homepage": "https://github.com/basz/zf2-module-phing-service",
+            "keywords": [
+                "module",
+                "phing",
+                "zf2"
+            ],
+            "time": "2014-07-04 18:00:02"
         },
         {
             "name": "continuousphp/sdk",
@@ -4143,74 +4193,6 @@
             "time": "2015-05-02 15:21:08"
         },
         {
-            "name": "zendframework/zend-developer-tools",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/ZendDeveloperTools.git",
-                "reference": "d3432681aa32177a741ad23604a40af9ad454acb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendDeveloperTools/zipball/d3432681aa32177a741ad23604a40af9ad454acb",
-                "reference": "d3432681aa32177a741ad23604a40af9ad454acb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "zendframework/zend-debug": "2.*",
-                "zendframework/zend-eventmanager": "2.*",
-                "zendframework/zend-modulemanager": "2.*",
-                "zendframework/zend-mvc": "2.*",
-                "zendframework/zend-servicemanager": "2.*",
-                "zendframework/zend-stdlib": "2.*",
-                "zendframework/zend-version": "2.*",
-                "zendframework/zend-view": "2.*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4"
-            },
-            "suggest": {
-                "aist/aist-git-tools": "Show you informations about current GIT repository",
-                "bjyoungblood/bjy-profiler": "Version: dev-master, allows the usage of the (Zend) Db collector.",
-                "doctrine/doctrine-orm-module": "Profile DoctrineORM queries",
-                "jhuet/zdt-logger-module": "Show you log data from Zend\\Log",
-                "ocramius/ocra-service-manager": "OcraServiceManager can help you track dependencies within your application.",
-                "san/san-session-toolbar": "SanSessionToolbar can help you see current Zend\\Session data you're using within your application.",
-                "snapshotpl/zf-snap-event-debugger": "ZfSnapEventDebugger can help you debug events from Zend\\EventManager"
-            },
-            "type": "zf-module",
-            "autoload": {
-                "psr-0": {
-                    "ZendDeveloperTools": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Evan Coury",
-                    "email": "me@evancoury.com",
-                    "homepage": "http://blog.evan.pro/"
-                },
-                {
-                    "name": "Eric Boh",
-                    "email": "cossish@gmail.com"
-                }
-            ],
-            "description": "Module for developer and debug tools for working with the ZF2 MVC layer.",
-            "homepage": "https://github.com/zendframework/ZendDeveloperTools",
-            "keywords": [
-                "debug",
-                "developer",
-                "module",
-                "zf2"
-            ],
-            "time": "2015-05-06 10:10:04"
-        },
-        {
             "name": "zfcampus/zf-apigility-admin",
             "version": "1.1.2",
             "source": {
@@ -4510,8 +4492,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mikey179/vfsstream": 20,
-        "zendframework/zend-developer-tools": 20
+        "mikey179/vfsstream": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

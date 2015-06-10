@@ -10,7 +10,7 @@ return
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOSqlite\Driver',
                 'params' =>
                 [
-                    'path'=> __DIR__.'/../../data/db/agent.db',
+                    'path'=> __DIR__ . '/../../data/db/agent.db',
                 ]
             ]
         ]

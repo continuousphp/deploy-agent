@@ -6,6 +6,7 @@
  */
 return array(
     'modules' => array(
+        'BsbPhingService',
         'Continuous\\DeployAgent',
         'ZF\\Apigility',
         'ZF\\Apigility\\Provider',
@@ -30,7 +31,7 @@ return array(
             './vendor',
         ),
         'config_glob_paths' => array(
-            '/vagrant/config/autoload/{,*.}{global,local,test}.php',
+            __DIR__ . '/../config/autoload/{,*.}{global,local,test}.php',
         ),
         'config_cache_key' => 'application.config.cache',
         'config_cache_enabled' => true,
