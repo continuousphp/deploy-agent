@@ -111,7 +111,7 @@ class ApplicationController extends AbstractConsoleController
         
         // destination param
         if (!$path = $request->getParam('path')) {
-            $name = Line::prompt("Enter the application path: ");
+            $path = Line::prompt("Enter the application path: ");
         }
         $application->setPath($path);
         
