@@ -1,55 +1,48 @@
-Vagrant.configure("2") do |config|
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
-  config.omnibus.chef_version = :latest
-  config.berkshelf.enabled = true
+VAGRANTFILE_API_VERSION = '2'
+
+@script = <<SCRIPT
+DOCUMENT_ROOT_ZEND="/vagrant/public"
+apt-get update
+apt-get install -y apache2 git curl php5-cli php5 php5-intl php5-sqlite sqlite3 php5-mcrypt
+echo "
+<VirtualHost *:80>
+    ServerName skeleton-zf.local
+    DocumentRoot $DOCUMENT_ROOT_ZEND
+    <Directory $DOCUMENT_ROOT_ZEND>
+        DirectoryIndex index.php
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+" > /etc/apache2/sites-available/deploy-agent.conf
+a2enmod rewrite
+a2dissite 000-default
+a2ensite deploy-agent
+php5enmod mcrypt
+service apache2 restart
+cd /vagrant
+curl -Ss https://getcomposer.org/installer | php
+echo "** [CONTINUOUSPHP] Visit http://localhost:8085 in your browser for to view the application **"
+SCRIPT
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.box = 'ubuntu/trusty64'
+  config.vm.network "forwarded_port", guest: 80, host: 8085
   config.vm.hostname = "deploy-agent.local"
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
-  config.hostmanager.ignore_private_ip = false
-  config.ssh.forward_agent = true
-  config.berkshelf.berksfile_path = "Berksfile"
+  config.vm.provision 'shell', inline: @script
 
-  config.vm.box = "trusty64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-
-  config.vm.network :private_network, ip: "192.168.33.27"
-  config.vm.provider :virtualbox do |vb, override|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  config.vm.provider "virtualbox" do |vb, override|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
     vb.customize ["modifyvm", :id, "--cpus", "1"]
-    
     override.vm.synced_folder ".", "/vagrant", :mount_options => ['dmode=775','fmode=775']
   end
-
-  config.vm.provider "vmware_fusion" do |v|
-    v.vmx["memsize"] = "1024"
-  end
   
-  config.vm.provider :vmware_workstation do |v, override|
-    v.vmx["memsize"] = "1024"
-  end
-
-  config.vm.provision :chef_solo do |chef|
-
-    chef.add_recipe "apt"
-    chef.add_recipe "build-essential"
-    chef.add_recipe "openssl"
-    chef.add_recipe "conf"
-    chef.add_recipe "zend-server"
-    chef.add_recipe "zend-server::xdebug"
-    chef.add_recipe "git"
-    chef.add_recipe "postfix"
-    chef.add_recipe "apache2"
-    chef.add_recipe "sandbox"
-    chef.add_recipe "zend-server::composer"
-    chef.add_recipe "locale"
-
-    chef.json = {
-      :zend_server => {
-        :php_version => "5.6",
-        :version => "8.0"
-      }
-    }
-  end
+  config.ssh.forward_agent = true
 
 end

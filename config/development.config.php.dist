@@ -9,8 +9,8 @@ return
     // Development time modules
     'modules' =>
     [
-        'ZF\\DevelopmentMode',
-        'ZF\Apigility\Admin',
+//        'ZF\\DevelopmentMode',
+//        'ZF\Apigility\Admin',
     ],
     // development time configuration globbing
     'module_listener_options' =>
