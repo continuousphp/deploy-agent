@@ -35,6 +35,15 @@ class ApplicationController extends AbstractConsoleController
         return $model;
     }
     
+    public function deployAction()
+    {
+        $model = new ConsoleModel();
+
+        $model->setResult('Deployment not yet implemented' . PHP_EOL);
+
+        return $model;
+    }
+    
     public function addAction()
     {
         /** @var \Zend\Console\Request $request */
@@ -86,10 +95,15 @@ class ApplicationController extends AbstractConsoleController
                 $projectOptions[]= $entry['_embedded']['provider']['uniqueIdentifier'] . '/' . $entry['url'];
             }
             
-            $projectKey = Select::prompt("Select a project:", $projectOptions, false, true);
-            
-            $project = $projects[$projectKey];
-            $provider->setProject($project);
+            if ($projectOptions) {
+                $projectKey = Select::prompt("Select a project:", $projectOptions, false, true);
+                
+                $project = $projects[$projectKey];
+                $provider->setProject($project);
+            } else {
+                $this->getConsole()->writeLine('There is no project to setup in your continuousphp account', ColorInterface::LIGHT_RED);
+                return false;
+            }
         }
 
         // pipeline param

@@ -12,7 +12,10 @@ use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\AfterSuiteScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Continuous\DeployAgent\Application\ApplicationManager;
+use Continuous\DeployAgent\Application\Application as ApplicationEntity;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\Application;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
  * Defines application features from the specific context.
@@ -68,6 +71,10 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
      */
     public function provisionDB(BeforeScenarioScope $scope)
     {
+        if (file_exists('data/db/test.db')) {
+            echo 'removing db...';
+            unlink('data/db/test.db');
+        }
         exec('./agent orm:schema-tool:create');
     }
 
@@ -76,8 +83,44 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
      */
     public function cleanDB(AfterScenarioScope $scope)
     {
+        /** @var EntityManager $entityManager */
+        $entityManager = self::$application->getServiceManager()->get('entitymanager');
+        $entityManager->clear();
+        $entityManager->getConnection()->close();
         unlink('data/db/test.db');
+        echo "database successfully cleared...";
     }
+
+    /**
+     * @Given I have the application
+     */
+    public function createApplication(TableNode $table)
+    {
+        echo "creating application...";
+        /** @var ApplicationManager $applicationManager */
+        $applicationManager = self::$application->getServiceManager()->get('application/application-manager');
+
+        $data = [];
+        foreach ($table->getTable() as $row) {
+            $data[$row[0]] = $row[1];
+        }
+        $data['reference'] = $data['pipeline'];
+        
+        // get provider instance from service manager
+        $data['provider'] = self::$application->getServiceManager()->get('provider/' . $data['provider']);
+        
+        /** @var ApplicationEntity $application */
+        $application = self::$application->getServiceManager()->get('application/application');
+        /** @var ClassMethods $hydrator */
+        $hydrator = self::$application->getServiceManager()->get('hydratormanager')->get('classmethods');
+        
+        $hydrator->hydrate($data, $data['provider']);
+        
+        $hydrator->hydrate($data, $application);
+        
+        $applicationManager->persist($application);
+    }
+
 
     /**
      * @Then I should have the application

@@ -57,8 +57,8 @@ return
                 [
                     'generate_proxies' => false,
                     'metadata_cache' => 'array',
-                    'query_cache' => 'array',
-                    'result_cache' => 'array',
+                    'query_cache' => false,
+                    'result_cache' => false,
                     'driver' => 'orm_default',
                     'naming_strategy' => 'doctrine.naming_strategy.underscore'
                 ]
@@ -111,6 +111,18 @@ return
                         [
                             'controller' => 'DeployAgent\Application',
                             'action' => 'add'
+                        ]
+                    ]
+                ],
+                'deploy-application' =>
+                [
+                    'options' =>
+                    [
+                        'route' => 'deploy application [--name=] [--build=]',
+                        'defaults' =>
+                        [
+                            'controller' => 'DeployAgent\Application',
+                            'action' => 'deploy'
                         ]
                     ]
                 ]
