@@ -1,0 +1,10 @@
+deployment:
+  hooks:
+    AfterInstall:
+      - command: echo 'the application is successfully installed'
+      - command: ./agent orm:schema-tool:create
+        timeout: 10
+    BeforeActivate:
+      - command: echo 'the application is going to start'
+    AfterActivate:
+      - command: echo 'the application has started'
