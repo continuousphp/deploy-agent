@@ -33,7 +33,8 @@ class RecursiveDirectoryAggregate implements \IteratorAggregate
             throw new \InvalidArgumentException('Expecting directory');
         }
         $this->iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(
-            $file->getPathname(), \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS
+            $file->getPathname(),
+            \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS
         ));
     }
 

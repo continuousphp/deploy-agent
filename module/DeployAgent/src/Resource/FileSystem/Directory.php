@@ -112,8 +112,7 @@ class Directory extends AbstractResource
                 $event->setError(null);
                 $event->setDestination($synced);
                 $event->setName(DeployEvent::EVENT_RECEIVE);
-            }
-            catch (FileSystemException $e) {
+            } catch (FileSystemException $e) {
                 $event->setSource(null);
                 $event->setError($e);
                 $event->setName(DeployEvent::EVENT_RECEIVE_ERROR);
@@ -149,8 +148,7 @@ class Directory extends AbstractResource
                 ErrorHandler::start(E_WARNING);
                 mkdir($relativePath, $this->dirCreateMode, true);
                 ErrorHandler::stop(true);
-            }
-            catch (\ErrorException $e) {
+            } catch (\ErrorException $e) {
                 throw new FileSystemException($e->getMessage(), FileSystemException::CREATION_ERROR, $e);
             }
         }
@@ -160,8 +158,7 @@ class Directory extends AbstractResource
             ErrorHandler::start(E_WARNING);
             copy($file->getPathname(), $destination);
             ErrorHandler::stop(true);
-        }
-        catch (\ErrorException $e) {
+        } catch (\ErrorException $e) {
             throw new FileSystemException($e->getMessage(), FileSystemException::COPY_ERROR, $e);
         }
 

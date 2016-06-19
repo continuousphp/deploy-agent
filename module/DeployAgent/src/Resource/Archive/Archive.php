@@ -60,8 +60,7 @@ class Archive extends AbstractResource
             throw new \InvalidArgumentException($result->getMessage());
         }
         if (null !== $this->archive) {
-            copy($workspace->getPathname(), $this->archive->getPathname());
-            unlink($workspace->getPathname());
+            rename($workspace->getPathname(), $this->archive->getPathname());
         } else {
             $this->archive = $workspace;
         }
@@ -76,8 +75,7 @@ class Archive extends AbstractResource
         try {
             $destination = $this->getTempDirectory();
             $this->getStrategy()->extract($this->archive, $destination);
-        }
-        catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             throw $ex;
         }
 

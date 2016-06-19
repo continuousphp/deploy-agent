@@ -9,6 +9,7 @@
  */
 
 namespace Continuous\DeployAgent\Resource\Archive\Extractor;
+
 use Doctrine\Instantiator\Exception\UnexpectedValueException;
 
 /**
@@ -48,7 +49,6 @@ class TarGzExtractor implements ExtractorInterface
         try {
             $targz = new \PharData($pathname);
         } catch (UnexpectedValueException $e) {
-            
         }
         
         $result   = new ValidationResult();

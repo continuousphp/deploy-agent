@@ -51,7 +51,7 @@ class ZipExtractor implements ExtractorInterface
         if (true === $open) {
             $result->setValid(true);
         } else {
-            switch((int) $open) {
+            switch ((int) $open) {
                 case \ZipArchive::ER_NOZIP:
                     $result->setMessage('Not a zip archive:' . $pathname);
                     break;
