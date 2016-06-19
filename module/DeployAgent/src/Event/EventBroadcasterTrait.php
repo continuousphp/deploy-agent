@@ -2,7 +2,7 @@
 /**
  * EventBroadcasterTrait.php
  *
- * @copyright Copyright (c) 2015 Continuous S.A. (https://continuousphp.com)
+ * @copyright Copyright (c) 2016 Continuous S.A. (https://continuousphp.com)
  * @license   http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
  * @file      EventBroadcasterTrait.php
  * @link      http://github.com/continuousphp/deploy-agent the canonical source repo

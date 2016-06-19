@@ -24,7 +24,7 @@ return [
     'agent' => [
 
         'package_retention' => 2, // package retention per application
-        'package_storage_key' => 'packages', // flysystem adapter key to store package history
+        'package_storage_path' => './data/packages', // flysystem adapter key to store package history
 
         /**
          * Destination path for your project

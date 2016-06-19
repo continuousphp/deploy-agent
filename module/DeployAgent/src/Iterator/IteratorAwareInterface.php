@@ -1,27 +1,28 @@
 <?php
 /**
- * EntityRepositoryProviderInterface.php
+ * IteratorAwareInterface.php
  *
  * @copyright Copyright (c) 2016 Continuous S.A. (https://continuousphp.com)
  * @license   http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
- * @file      EntityRepositoryProviderInterface.php
+ * @file      IteratorAwareInterface.php
  * @link      http://github.com/continuousphp/deploy-agent the canonical source repo
  */
 
-namespace Continuous\DeployAgent;
-
-use Doctrine\ORM\EntityRepository;
+namespace Continuous\DeployAgent\Iterator;
 
 /**
- * EntityRepositoryProviderInterface
+ * IteratorAwareInterface
  *
  * @package    Continuous\DeployAgent
+ * @subpackage Iterator
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
  */
-interface EntityRepositoryProviderInterface
+interface IteratorAwareInterface
 {
     /**
-     * @return EntityRepository
+     * @param \Iterator $iterator
+     *
+     * @return $this
      */
-    public function getEntityRepository();
+    public function setIterator(\Iterator $iterator);
 }

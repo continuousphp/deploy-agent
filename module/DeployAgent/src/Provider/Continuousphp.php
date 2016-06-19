@@ -2,7 +2,7 @@
 /**
  * Continuousphp.php
  *
- * @copyright Copyright (c) 2015 Continuous S.A. (https://continuousphp.com)
+ * @copyright Copyright (c) 2016 Continuous S.A. (https://continuousphp.com)
  * @license   http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
  * @file      Continuousphp.php
  * @link      http://github.com/continuousphp/deploy-agent the canonical source repo
@@ -10,6 +10,7 @@
 
 namespace Continuous\DeployAgent\Provider;
 
+use Continuous\DeployAgent\Resource\Http\Http;
 use Doctrine\ORM\Mapping as ORM;
 use Reprovinci\DoctrineEncrypt\Configuration\Encrypted;
 use Continuous\Sdk\Service;
@@ -128,7 +129,14 @@ class Continuousphp extends AbstractProvider
      */
     public function getSource($revision)
     {
+        $package = $this->getClient()->getPackage([
+            'provider' => $this->getRepositoryProvider(),
+            'repository' => $this->getRepository(),
+            'buildId' => $revision,
+            'packageType' => 'deploy'
+        ]);
         
+        return new Http($package['url']);
     }
 
     /**

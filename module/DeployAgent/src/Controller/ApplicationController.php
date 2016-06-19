@@ -2,7 +2,7 @@
 /**
  * ApplicationController.php
  *
- * @copyright Copyright (c) 2015 Continuous S.A. (https://continuousphp.com)
+ * @copyright Copyright (c) 2016 Continuous S.A. (https://continuousphp.com)
  * @license   http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
  * @file      ApplicationController.php
  * @link      http://github.com/continuousphp/deploy-agent the canonical source repo
@@ -10,8 +10,13 @@
 
 namespace Continuous\DeployAgent\Controller;
 
+use Continuous\DeployAgent\Agent\Agent;
 use Continuous\DeployAgent\Application\Application;
+use Continuous\DeployAgent\Event\DeployEvent;
 use Continuous\DeployAgent\Provider\Continuousphp;
+use Continuous\DeployAgent\Resource\Archive\Archive;
+use Continuous\DeployAgent\Resource\FileSystem\Directory;
+use League\Flysystem\Filesystem;
 use Zend\Console\ColorInterface;
 use Zend\Console\Console;
 use Zend\Console\Prompt\Line;
@@ -58,7 +63,22 @@ class ApplicationController extends AbstractConsoleController
         
         /** @var Continuousphp $provider */
         $provider = $application->getProvider();
-        $build = $provider->getSource($request->getParam('build'));
+        $origin = $provider->getSource($request->getParam('build'));
+        $origin->setFilename($request->getParam('build') . '.tar.gz');
+        
+        $filesystem = new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'));
+        $filesystem->createDir($application->getName());
+        $resourcePath = $this->getServiceLocator()->get('Config')['agent']['package_storage_path']
+                      . DIRECTORY_SEPARATOR . $application->getName()
+                      . DIRECTORY_SEPARATOR . $request->getParam('build') . '.tar.gz';
+        
+        $resource = new Archive($resourcePath);
+        
+        $destination = new Directory($application->getPath());
+
+        $agent = new Agent();
+        $agent->setSource($origin)->setResource($resource)->setDestination($destination);
+        $agent->deploy();
 
         return $model;
     }
