@@ -103,6 +103,15 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then file :arg1 should match :arg2
+     */
+    public function fileShouldMatch($file, $expected)
+    {
+        \PHPUnit_Framework_Assert::assertFileEquals($expected, $file);
+    }
+
+
+    /**
      * @Given I have the application
      */
     public function createApplication(TableNode $table)

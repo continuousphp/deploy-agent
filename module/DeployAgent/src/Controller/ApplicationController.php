@@ -74,7 +74,17 @@ class ApplicationController extends AbstractConsoleController
         
         $resource = new Archive($resourcePath);
         
-        $destination = new Directory($application->getPath());
+        $destination = new Directory($application->getPath() . DIRECTORY_SEPARATOR . $request->getParam('build'));
+
+        $destination->getEventManager()->attach(
+            DeployEvent::EVENT_RECEIVE_POST,
+            function (DeployEvent $event) use ($application, $request) {
+                symlink(
+                    $application->getPath() . DIRECTORY_SEPARATOR . $request->getParam('build'),
+                    $application->getPath() . DIRECTORY_SEPARATOR . 'current'
+                );
+            }
+        );
 
         $agent = new Agent();
         $agent->setSource($origin)->setResource($resource)->setDestination($destination);

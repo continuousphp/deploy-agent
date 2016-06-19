@@ -121,7 +121,9 @@ class Directory extends AbstractResource
             $events->trigger($event);
         }
 
-        $events->trigger(DeployEvent::EVENT_RECEIVE_POST);
+        $postEvent    = new DeployEvent(null, $this);
+        $postEvent->setWorkspace($build);
+        $events->trigger(DeployEvent::EVENT_RECEIVE_POST, $event);
 
         return $this->directory;
     }
