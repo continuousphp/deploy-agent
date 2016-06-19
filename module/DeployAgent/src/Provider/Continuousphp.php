@@ -20,7 +20,7 @@ use Continuous\Sdk\Service;
  * @package    Continuous\DeployAgent
  * @subpackage Provider
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
- * 
+ *
  * @ORM\Entity
  */
 class Continuousphp extends AbstractProvider

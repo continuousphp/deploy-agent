@@ -34,7 +34,7 @@ trait EventBroadcasterTrait
      */
     public function broadcastEvents(EventManagerInterface $events, $prefixWith = '', $replaceTarget = true)
     {
-        $events->attach('*', function(EventInterface $event) use($prefixWith, $replaceTarget) {
+        $events->attach('*', function (EventInterface $event) use ($prefixWith, $replaceTarget) {
             if (true === $replaceTarget) {
                 $event->setTarget($this);
             }

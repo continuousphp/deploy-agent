@@ -10,6 +10,8 @@
 
 namespace Continuous\DeployAgent\Controller;
 
+use Continuous\DeployAgent\Application\Application;
+use Continuous\DeployAgent\Provider\Continuousphp;
 use Zend\Console\ColorInterface;
 use Zend\Console\Console;
 use Zend\Console\Prompt\Line;
@@ -37,9 +39,26 @@ class ApplicationController extends AbstractConsoleController
     
     public function deployAction()
     {
+        /** @var \Zend\Console\Request $request */
+        $request = $this->getRequest();
+        
         $model = new ConsoleModel();
 
-        $model->setResult('Deployment not yet implemented' . PHP_EOL);
+        // name param
+        if (!$name = $request->getParam('name')) {
+            $name = Line::prompt("Enter an application name: ");
+        }
+
+        /** @var \Continuous\DeployAgent\Application\ApplicationManager $applicationManager */
+        $applicationManager = $this->getServiceLocator()
+            ->get('application/application-manager');
+        
+        /** @var Application $application */
+        $application = $applicationManager->get($name);
+        
+        /** @var Continuousphp $provider */
+        $provider = $application->getProvider();
+        $build = $provider->getSource($request->getParam('build'));
 
         return $model;
     }
@@ -91,7 +110,7 @@ class ApplicationController extends AbstractConsoleController
             
             $projectOptions = [];
             
-            foreach($projects as $entry) {
+            foreach ($projects as $entry) {
                 $projectOptions[]= $entry['_embedded']['provider']['uniqueIdentifier'] . '/' . $entry['url'];
             }
             
@@ -101,7 +120,10 @@ class ApplicationController extends AbstractConsoleController
                 $project = $projects[$projectKey];
                 $provider->setProject($project);
             } else {
-                $this->getConsole()->writeLine('There is no project to setup in your continuousphp account', ColorInterface::LIGHT_RED);
+                $this->getConsole()->writeLine(
+                    'There is no project to setup in your continuousphp account',
+                    ColorInterface::LIGHT_RED
+                );
                 return false;
             }
         }

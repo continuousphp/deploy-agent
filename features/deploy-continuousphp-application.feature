@@ -11,5 +11,6 @@ Feature: Deploy a specific build of a configured application provided by continu
       | pipeline           | refs/heads/master                        |
       | name               | deploy-agent-staging                     |
       | path               | /tmp/test/application                    |
-    When I run "./agent deploy application --name=deploy-agent-staging --build=latest"
+    When I run "./agent deploy application --name=deploy-agent-staging --build=3a4c7c3d-27db-4221-aaf5-401de8aa09c3"
     Then the exit code should be "0"
+    And file "./data/packages/deploy-agent-staging/3a4c7c3d-27db-4221-aaf5-401de8aa09c3.tar.gz" should exist

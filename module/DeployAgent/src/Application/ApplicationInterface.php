@@ -9,6 +9,7 @@
  */
 
 namespace Continuous\DeployAgent\Application;
+
 use Continuous\DeployAgent\Destination\DestinationInterface;
 use Continuous\DeployAgent\Provider\ProviderInterface;
 

@@ -20,31 +20,33 @@ use Continuous\DeployAgent\Provider\ProviderInterface;
  * @package    Continuous\DeployAgent
  * @subpackage Application
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
- * 
+ *
  * @ORM\Entity
  */
 class Application implements ApplicationInterface
 {
     /**
      * The application name
-     * 
+     *
      * @ORM\Id
      * @ORM\Column(type="string")
-     * 
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * @ORM\OneToOne(targetEntity="Continuous\DeployAgent\Provider\AbstractProvider", cascade={"persist"}, orphanRemoval=true)
-     * 
+     * @ORM\OneToOne(targetEntity="Continuous\DeployAgent\Provider\AbstractProvider",
+     *               cascade={"persist"},
+     *               orphanRemoval=true)
+     *
      * @var ProviderInterface
      */
     protected $provider;
 
     /**
      * @ORM\Column(type="string")
-     * 
+     *
      * @var string
      */
     protected $path;

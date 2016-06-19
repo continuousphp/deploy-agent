@@ -21,3 +21,5 @@ data/logs/*
 !data/logs/.gitkeep
 data/db/*
 !data/db/.gitkeep
+data/packages/*
+!data/packages/.gitkeep

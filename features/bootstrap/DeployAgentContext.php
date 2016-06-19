@@ -88,7 +88,18 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
         $entityManager->clear();
         $entityManager->getConnection()->close();
         unlink('data/db/test.db');
-        echo "database successfully cleared...";
+    }
+
+    /**
+     * Checks whether a file at provided path exists.
+     *
+     * @Given /^file "([^"]*)" should exist$/
+     *
+     * @param   string $path
+     */
+    public function fileShouldExist($path)
+    {
+        \PHPUnit_Framework_Assert::assertFileExists($path);
     }
 
     /**
@@ -96,7 +107,6 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
      */
     public function createApplication(TableNode $table)
     {
-        echo "creating application...";
         /** @var ApplicationManager $applicationManager */
         $applicationManager = self::$application->getServiceManager()->get('application/application-manager');
 

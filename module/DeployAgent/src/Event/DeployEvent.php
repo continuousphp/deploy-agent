@@ -10,7 +10,7 @@
 
 namespace Continuous\DeployAgent\Event;
 
-use Continuous\DeployAgent\Workspace\Workspace;;
+use Continuous\DeployAgent\Workspace\Workspace;
 use Zend\EventManager\Event;
 
 /**

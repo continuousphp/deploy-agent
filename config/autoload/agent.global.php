@@ -6,7 +6,25 @@
  * drop this config file in it and change the values as you wish.
  */
 return [
+    'bsb_flysystem' =>
+    [
+        'adapters' =>
+        [
+            'packages' =>
+            [
+                'type' => 'local',
+                'options' =>
+                [
+                    'root' => './data/packages'
+                ]
+            ]
+        ]
+    ],
+    
     'agent' => [
+
+        'package_retention' => 2, // package retention per application
+        'package_storage_key' => 'packages', // flysystem adapter key to store package history
 
         /**
          * Destination path for your project
