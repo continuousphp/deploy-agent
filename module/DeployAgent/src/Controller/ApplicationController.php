@@ -66,6 +66,8 @@ class ApplicationController extends AbstractConsoleController
         $origin = $provider->getSource($request->getParam('build'));
         $origin->setFilename($request->getParam('build') . '.tar.gz');
         
+        $filesystem = new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'));
+        $filesystem->createDir($application->getName());
         $resourcePath = $this->getServiceLocator()->get('Config')['agent']['package_storage_path']
                       . DIRECTORY_SEPARATOR . $application->getName()
                       . DIRECTORY_SEPARATOR . $request->getParam('build') . '.tar.gz';
