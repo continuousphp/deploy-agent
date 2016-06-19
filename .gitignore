@@ -1,5 +1,6 @@
 nbproject
 ._*
+composer.phar
 .~lock.*
 .buildpath
 .DS_Store

@@ -3,5 +3,4 @@
     <description>PSR2 Coding standard</description>
     <rule ref="PSR2"/>
     <file>module/DeployAgent/src</file>
-    <file>module/DeployAgent/tests</file>
 </ruleset>
