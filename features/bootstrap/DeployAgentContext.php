@@ -14,6 +14,9 @@ use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Continuous\DeployAgent\Application\ApplicationManager;
 use Continuous\DeployAgent\Application\Application as ApplicationEntity;
 use Doctrine\ORM\EntityManager;
+use Zend\Http\Client;
+use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\Mvc\Application;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
@@ -26,6 +29,11 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
      * @var Application
      */
     protected static $application;
+
+    /**
+     * @var Response
+     */
+    protected $response;
     
     /**
      * Initializes context.
@@ -198,4 +206,34 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
             }
         }
     }
+    
+    /**
+     * @When I post the following to :arg1:
+     */
+    public function postMessage($url, TableNode $data)
+    {
+        if (strpos($url, 'http')!==0) {
+            $url = 'http://127.0.0.1' . $url;
+        }
+        
+        $data = $data->getRowsHash();
+        
+        $client = new Client($url, ['timeout' => 360]);
+        $client->setMethod(Request::METHOD_POST)
+            ->setParameterPost($data);
+        
+        $this->response = $client->send();
+    }
+
+    /**
+     * @Then the status code should be :code
+     */
+    public function theStatusCodeShouldBe($code)
+    {
+        if ($this->response->getStatusCode() != $code) {
+            echo $this->response->getBody();
+        }
+        \PHPUnit_Framework_Assert::assertEquals($code, $this->response->getStatusCode());
+    }
+
 }

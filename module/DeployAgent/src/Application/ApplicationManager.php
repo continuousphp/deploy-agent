@@ -38,6 +38,30 @@ class ApplicationManager implements EntityManagerAwareInterface, EntityRepositor
     }
 
     /**
+     * @param $name
+     * @return Application
+     */
+    public function find($provider, $repositoryProvider, $repository, $pipeline)
+    {
+        $dataRepository = $this->getEntityManager()
+            ->getRepository('Continuous\DeployAgent\Provider\\' . ucfirst($provider));
+        
+        $providers = $dataRepository->findBy(
+            [
+                'repositoryProvider' => $repositoryProvider,
+                'repository' => $repository,
+                'reference' => $pipeline
+            ],
+            null,
+            1
+        );
+        
+        if (!empty($providers)) {
+            return $providers[0]->getApplication();
+        }
+    }
+
+    /**
      * @param Application $application
      */
     public function persist(Application $application)

@@ -7,6 +7,7 @@ return
         'invokables' => 
         [
             'DeployAgent\Index' => 'Continuous\DeployAgent\Controller\IndexController',
+            'DeployAgent\Hook' => 'Continuous\DeployAgent\Controller\HookController',
             'DeployAgent\Application' => 'Continuous\DeployAgent\Controller\ApplicationController'
         ]
     ],
@@ -81,6 +82,19 @@ return
                     ],
                 ],
             ],
+            'hook' =>
+            [
+                'type' => 'segment',
+                'options' =>
+                [
+                    'route' => '/webhook/:buildProvider',
+                    'defaults' =>
+                    [
+                        'controller' => 'DeployAgent\Hook',
+                        'action'     => 'deploy'
+                    ]
+                ]
+            ]
         ],
     ],
     'console' =>

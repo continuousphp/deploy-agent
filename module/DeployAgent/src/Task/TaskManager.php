@@ -239,13 +239,15 @@ class TaskManager implements ListenerAggregateInterface
         $origin = $provider->getSource($build);
         $origin->setFilename($build . '.tar.gz');
 
-        $origin->getEventManager()->attach(
-            DeployEvent::EVENT_FETCH_PRE,
-            function (DeployEvent $event) {
-                $this->getConsole()
-                    ->writeLine('Downloading package...', ColorInterface::LIGHT_CYAN);
-            }
-        );
+        if ($this->getConsole()) {
+            $origin->getEventManager()->attach(
+                DeployEvent::EVENT_FETCH_PRE,
+                function (DeployEvent $event) {
+                    $this->getConsole()
+                        ->writeLine('Downloading package...', ColorInterface::LIGHT_CYAN);
+                }
+            );
+        }
 
         $this->getPackageFileSystem()->createDir($application->getName());
         $resourcePath = $this->getPackageStoragePath()
@@ -254,13 +256,15 @@ class TaskManager implements ListenerAggregateInterface
 
         $resource = new Archive($resourcePath);
 
-        $resource->getEventManager()->attach(
-            DeployEvent::EVENT_FETCH_PRE,
-            function () {
-                $this->getConsole()
-                    ->writeLine('Extracting package...', ColorInterface::LIGHT_CYAN);
-            }
-        );
+        if ($this->getConsole()) {
+            $resource->getEventManager()->attach(
+                DeployEvent::EVENT_FETCH_PRE,
+                function () {
+                    $this->getConsole()
+                        ->writeLine('Extracting package...', ColorInterface::LIGHT_CYAN);
+                }
+            );
+        }
 
         $destination = new Directory($application->getPath() . DIRECTORY_SEPARATOR . $build);
 
@@ -297,11 +301,13 @@ class TaskManager implements ListenerAggregateInterface
 
         $application->getEventManager()->trigger($application::EVENT_BEFORE_ACTIVATE);
 
-        $this->getConsole()
-            ->writeLine(
-                'Starting ' . $application->getName() . ' (' . $build . ')',
-                ColorInterface::LIGHT_CYAN
-            );
+        if ($this->getConsole()) {
+            $this->getConsole()
+                ->writeLine(
+                    'Starting ' . $application->getName() . ' (' . $build . ')',
+                    ColorInterface::LIGHT_CYAN
+                );
+        }
 
         symlink(
             $application->getPath() . DIRECTORY_SEPARATOR . $build,
@@ -310,11 +316,13 @@ class TaskManager implements ListenerAggregateInterface
 
         $application->getEventManager()->trigger($application::EVENT_AFTER_ACTIVATE);
 
-        $this->getConsole()
-            ->writeLine(
-                $application->getName() . ' (' . $build . ') has successfully started',
-                ColorInterface::LIGHT_CYAN
-            );
+        if ($this->getConsole()) {
+            $this->getConsole()
+                ->writeLine(
+                    $application->getName() . ' (' . $build . ') has successfully started',
+                    ColorInterface::LIGHT_CYAN
+                );
+        }
     }
     
     public function loadConfig($path)

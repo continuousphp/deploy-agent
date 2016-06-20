@@ -10,6 +10,7 @@
 
 namespace Continuous\DeployAgent\Provider;
 
+use Continuous\DeployAgent\Application\Application;
 use Continuous\DeployAgent\Source\SourceInterface;
 
 /**
@@ -31,4 +32,15 @@ interface ProviderInterface
      * @return array
      */
     public function getRevisions();
+
+    /**
+     * @return Application
+     */
+    public function getApplication();
+
+    /**
+     * @param mixed $application
+     * @return AbstractProvider
+     */
+    public function setApplication(Application $application);
 }

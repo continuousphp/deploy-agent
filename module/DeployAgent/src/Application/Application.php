@@ -46,6 +46,7 @@ class Application implements ApplicationInterface
 
     /**
      * @ORM\OneToOne(targetEntity="Continuous\DeployAgent\Provider\AbstractProvider",
+     *               mappedBy="application",
      *               cascade={"persist"},
      *               orphanRemoval=true)
      *
@@ -93,6 +94,7 @@ class Application implements ApplicationInterface
      */
     public function setProvider(ProviderInterface $provider)
     {
+        $provider->setApplication($this);
         $this->provider = $provider;
         
         return $this;
