@@ -46,5 +46,4 @@ class Command implements TaskRunnerInterface
             throw new Exception('The command exit with code ' . $return, Exception::BAD_EXIT_EXCEPTION);
         }
     }
-
 }
