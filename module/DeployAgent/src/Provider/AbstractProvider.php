@@ -10,6 +10,7 @@
 
 namespace Continuous\DeployAgent\Provider;
 
+use Continuous\DeployAgent\Application\Application;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,10 +39,35 @@ abstract class AbstractProvider implements ProviderInterface
     protected $id;
 
     /**
+     * @ORM\OneToOne(targetEntity="Continuous\DeployAgent\Application\Application", inversedBy="provider")
+     * @ORM\JoinColumn(name="application_name", referencedColumnName="name")
+     * @var Application
+     */
+    protected $application;
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * @param mixed $application
+     * @return AbstractProvider
+     */
+    public function setApplication(Application $application)
+    {
+        $this->application = $application;
+        return $this;
     }
 }
