@@ -16,7 +16,9 @@ use Continuous\DeployAgent\Event\DeployEvent;
 use Continuous\DeployAgent\Provider\Continuousphp;
 use Continuous\DeployAgent\Resource\Archive\Archive;
 use Continuous\DeployAgent\Resource\FileSystem\Directory;
+use Continuous\DeployAgent\Task\TaskManager;
 use League\Flysystem\Filesystem;
+use Zend\Config\Config;
 use Zend\Console\ColorInterface;
 use Zend\Console\Console;
 use Zend\Console\Prompt\Line;
@@ -47,12 +49,12 @@ class ApplicationController extends AbstractConsoleController
         /** @var \Zend\Console\Request $request */
         $request = $this->getRequest();
         
-        $model = new ConsoleModel();
-
         // name param
         if (!$name = $request->getParam('name')) {
             $name = Line::prompt("Enter an application name: ");
         }
+        
+        $build = $request->getParam('build');
 
         /** @var \Continuous\DeployAgent\Application\ApplicationManager $applicationManager */
         $applicationManager = $this->getServiceLocator()
@@ -61,36 +63,18 @@ class ApplicationController extends AbstractConsoleController
         /** @var Application $application */
         $application = $applicationManager->get($name);
         
-        /** @var Continuousphp $provider */
-        $provider = $application->getProvider();
-        $origin = $provider->getSource($request->getParam('build'));
-        $origin->setFilename($request->getParam('build') . '.tar.gz');
-        
-        $filesystem = new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'));
-        $filesystem->createDir($application->getName());
-        $resourcePath = $this->getServiceLocator()->get('Config')['agent']['package_storage_path']
-                      . DIRECTORY_SEPARATOR . $application->getName()
-                      . DIRECTORY_SEPARATOR . $request->getParam('build') . '.tar.gz';
-        
-        $resource = new Archive($resourcePath);
-        
-        $destination = new Directory($application->getPath() . DIRECTORY_SEPARATOR . $request->getParam('build'));
+        $taskManager = new TaskManager();
+        $taskManager->setConsole($this->getConsole())
+                    ->setPackageStoragePath($this->getServiceLocator()->get('Config')['agent']['package_storage_path'])
+                    ->setPackageFileSystem(
+                        new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'))
+                    );
 
-        $destination->getEventManager()->attach(
-            DeployEvent::EVENT_RECEIVE_POST,
-            function (DeployEvent $event) use ($application, $request) {
-                symlink(
-                    $application->getPath() . DIRECTORY_SEPARATOR . $request->getParam('build'),
-                    $application->getPath() . DIRECTORY_SEPARATOR . 'current'
-                );
-            }
-        );
+        $application->getEventManager()->attachAggregate($taskManager);
+        
+        $application->getEventManager()->trigger(Application::EVENT_INSTALL, $application, ['build' => $build]);
 
-        $agent = new Agent();
-        $agent->setSource($origin)->setResource($resource)->setDestination($destination);
-        $agent->deploy();
-
-        return $model;
+        return false;
     }
     
     public function addAction()

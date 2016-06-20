@@ -91,6 +91,15 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @AfterScenario @filesystem
+     */
+    public function cleanFileSystem(AfterScenarioScope $scope)
+    {
+        exec('rm -Rf /tmp/test');
+        exec('rm -Rf data/packages/*');
+    }
+
+    /**
      * Checks whether a file at provided path exists.
      *
      * @Given /^file "([^"]*)" should exist$/
@@ -109,7 +118,6 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     {
         \PHPUnit_Framework_Assert::assertFileEquals($expected, $file);
     }
-
 
     /**
      * @Given I have the application

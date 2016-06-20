@@ -13,6 +13,7 @@ namespace Continuous\DeployAgent\Application;
 use Doctrine\ORM\Mapping as ORM;
 use Continuous\DeployAgent\Destination\DestinationInterface;
 use Continuous\DeployAgent\Provider\ProviderInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Application
@@ -25,6 +26,14 @@ use Continuous\DeployAgent\Provider\ProviderInterface;
  */
 class Application implements ApplicationInterface
 {
+    use EventManagerAwareTrait;
+    
+    const EVENT_INSTALL = 'Install';
+    const EVENT_AFTER_INSTALL = 'AfterInstall';
+    const EVENT_BEFORE_ACTIVATE = 'BeforeActivate';
+    const EVENT_ACTIVATE = 'Activate';
+    const EVENT_AFTER_ACTIVATE = 'AfterActivate';
+    
     /**
      * The application name
      *

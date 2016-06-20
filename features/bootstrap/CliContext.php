@@ -74,5 +74,60 @@ class CliContext implements Context, SnippetAcceptingContext
             "The command has not returned $return but $this->lastReturn:" . PHP_EOL . implode(PHP_EOL, $this->lastOutput) 
         );
     }
-    
+
+    /**
+     * Checks whether last command output contains provided string.
+     *
+     * @Then the output should contain:
+     *
+     * @param PyStringNode $text PyString text instance
+     */
+    public function theOutputShouldContain(PyStringNode $text)
+    {
+        \PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $this->getOutput());
+    }
+
+    private function getExpectedOutput(PyStringNode $expectedText)
+    {
+        $text = strtr($expectedText, array('\'\'\'' => '"""', '%%TMP_DIR%%' => sys_get_temp_dir() . DIRECTORY_SEPARATOR));
+
+        // windows path fix
+        if ('/' !== DIRECTORY_SEPARATOR) {
+            $text = preg_replace_callback(
+                '/[ "]features\/[^\n "]+/', function ($matches) {
+                return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
+            }, $text
+            );
+            $text = preg_replace_callback(
+                '/\<span class\="path"\>features\/[^\<]+/', function ($matches) {
+                return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
+            }, $text
+            );
+            $text = preg_replace_callback(
+                '/\+[fd] [^ ]+/', function ($matches) {
+                return str_replace('/', DIRECTORY_SEPARATOR, $matches[0]);
+            }, $text
+            );
+        }
+
+        return $text;
+    }
+
+    private function getOutput()
+    {
+        $output = implode("\n", $this->lastOutput);
+
+        // Normalize the line endings in the output
+        if ("\n" !== PHP_EOL) {
+            $output = str_replace(PHP_EOL, "\n", $output);
+        }
+        
+        // Remove ANSI control chars
+        $output = preg_replace('/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]/', '', $output);
+
+        // Replace wrong warning message of HHVM
+        $output = str_replace('Notice: Undefined index: ', 'Notice: Undefined offset: ', $output);
+
+        return trim(preg_replace("/ +$/m", '', $output));
+    }
 }
