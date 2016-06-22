@@ -15,7 +15,6 @@ It manages automated deployment workflow based on webhook for your projects.
 * PHP 5.5+
 * PHP mcrypt extension
 * sqlite or other doctrine compatible SGBD (sqlite is currently the only one officially supported)
-*
 
 # Installation
 
