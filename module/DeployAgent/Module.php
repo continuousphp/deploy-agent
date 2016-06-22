@@ -63,7 +63,10 @@ class Module implements
                     . PHP_EOL . '(for continuousphp only)'
                 ],
                 ['--name=NAME', 'The name of the application'],
-                ['--path=PATH' => 'The destination path']
+                ['--path=PATH', 'The destination path'],
+                'deploy application [--name=] [--build=]' => 'deploy an application build',
+                ['--name=NAME', 'The name of the application'],
+                ['--build=BUILD', 'The build to deploy']
             ];
     }
 
