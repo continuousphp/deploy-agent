@@ -8,7 +8,7 @@ Develop :
 
 Automated deployment agent to install on your servers.
 
-It manages automated deployment workflow based on webhook for your projects.
+It manages automated deployment workflows based on webhooks for your projects.
 
 # Requirements
 
@@ -24,13 +24,13 @@ It manages automated deployment workflow based on webhook for your projects.
 
 ## HTTP server config
 
-To setup apache, setup a virtual host to point to the public/ directory of the project and you should be ready to go!
-It should look something like below:
+To setup apache, setup a virtual host that points to the public/ directory of the project and you should be ready to go!
+It should be something similar to:
 
 ```
 <VirtualHost *>
-    DocumentRoot /path/to/public/dir
-    <Directory /path/to/public/dir>
+    DocumentRoot /path/to/deploy-agent/public
+    <Directory /path/to/deploy-agent/public>
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
@@ -69,15 +69,15 @@ Also enable apache mod rewrite in order to support webhook routes
 
 ## Deploy an application
 ```
-./agent deploy application [--name=] [--build]
+./agent deploy application [--name=] [--build=]
 ```
 
 * **--name** The name of the application
-* **--build** The build to deploy
+* **--build** The ID of the build to deploy
 
 # Application path
 
-When a deployment occurs, the Deploy Agent create a new folder for every build its dedicated workspace.
+When a deployment occurs, the Deploy Agent creates a new folder for every build in its dedicated workspace.
 To enable the new build, it will create/update a symlink to the current build
 
 ```
@@ -124,4 +124,4 @@ Configure it as following:
 Please note that this project is released with a [Contributor Code of Conduct](http://contributor-covenant.org/version/1/2/0/).
 By participating in this project you agree to abide by its terms.
 
-Fork the project, create a feature branch, and send us a pull request.
+Feel free to fork the project, create a feature branch, and send us a pull request!
