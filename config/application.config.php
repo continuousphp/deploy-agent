@@ -7,7 +7,6 @@
 return array(
     'modules' => array(
         'BsbFlysystem',
-        'BsbPhingService',
         'Continuous\\DeployAgent',
         'DoctrineModule',
         'DoctrineORMModule'
