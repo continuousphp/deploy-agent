@@ -49,5 +49,8 @@
     "psr-4": {
       "Continuous\\Features\\": "features/bootstrap/"
     }
+  },
+  "scripts": {
+    "post-create-project-cmd": "scripts/post-create-project"
   }
 }

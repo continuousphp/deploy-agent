@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @file
+ * deploy-agent setup hook
+ */
+
+$command = './agent orm:schema-tool:create';
+
+passthru($command, $return_value);
+
+exit($return_value);
