@@ -7,8 +7,8 @@
 return array(
     'modules' => array(
         'BsbFlysystem',
-        'Continuous\\DeployAgent',
         'DoctrineModule',
+        'Continuous\\DeployAgent',
         'DoctrineORMModule'
     ),
     'module_listener_options' => array(

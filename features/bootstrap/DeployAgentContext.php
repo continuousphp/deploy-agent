@@ -49,7 +49,7 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     /**
      * @BeforeSuite
      */
-    public static function setupTests(BeforeSuiteScope $scope)
+    public static function setupTests()
     {
         copy('config/autoload/db.test.php.dist', 'config/autoload/db.test.php');
         
@@ -69,7 +69,7 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     /**
      * @AfterSuite
      */
-    public static function removeDB(AfterSuiteScope $scope)
+    public static function removeDB()
     {
         unlink('config/autoload/db.test.php');
     }
@@ -77,7 +77,7 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     /**
      * @BeforeScenario
      */
-    public function provisionDB(BeforeScenarioScope $scope)
+    public function provisionDB()
     {
         if (file_exists('data/db/test.db')) {
             echo 'removing db...';
@@ -89,7 +89,7 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     /**
      * @AfterScenario
      */
-    public function cleanDB(AfterScenarioScope $scope)
+    public function cleanDB()
     {
         /** @var EntityManager $entityManager */
         $entityManager = self::$application->getServiceManager()->get('entitymanager');
@@ -99,9 +99,19 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @BeforeScenario @filesystem
+     */
+    public function prepareFileSystem()
+    {
+        if (!file_exists('/tmp/test')) {
+            mkdir('/tmp/test', 0777, true);
+        }
+    }
+
+    /**
      * @AfterScenario @filesystem
      */
-    public function cleanFileSystem(AfterScenarioScope $scope)
+    public function cleanFileSystem()
     {
         exec('rm -Rf /tmp/test');
         exec('rm -Rf data/packages/*');

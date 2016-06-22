@@ -248,6 +248,8 @@ class TaskManager implements ListenerAggregateInterface
                 }
             );
         }
+        
+        $mask = umask(0);
 
         $this->getPackageFileSystem()->createDir($application->getName());
         $resourcePath = $this->getPackageStoragePath()
@@ -278,6 +280,8 @@ class TaskManager implements ListenerAggregateInterface
         $agent = new Agent();
         $agent->setSource($origin)->setResource($resource)->setDestination($destination);
         $agent->deploy();
+        
+        umask($mask);
     }
     
     public function activate(EventInterface $event)

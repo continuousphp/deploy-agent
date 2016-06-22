@@ -13,6 +13,7 @@ namespace Continuous\DeployAgent\Application;
 use Continuous\DeployAgent\EntityManagerAwareInterface;
 use Continuous\DeployAgent\EntityRepositoryProviderInterface;
 use Continuous\DeployAgent\EntityRepositoryProviderTrait;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * ApplicationManager
@@ -59,6 +60,14 @@ class ApplicationManager implements EntityManagerAwareInterface, EntityRepositor
         if (!empty($providers)) {
             return $providers[0]->getApplication();
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function findAll()
+    {
+        return $this->getEntityRepository()->findAll();
     }
 
     /**
