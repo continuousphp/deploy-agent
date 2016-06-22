@@ -9,15 +9,11 @@ composer.phar
 .settings
 .vagrant
 vendor/
-public/vendor/
 config/application.config.old
 config/development.config.php
 config/autoload/local.php
 config/autoload/*.local.php
 config/autoload/*.test.php
-!public/vendor/README.md
-data/cache/*
-!data/cache/.gitkeep
 data/logs/*
 !data/logs/.gitkeep
 data/db/*

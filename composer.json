@@ -24,7 +24,6 @@
     "zendframework/zendframework": "2.5.2",
     "doctrine/doctrine-orm-module": "~0.10",
     "reprovinci/doctrine-encrypt": "~3.0",
-    "phing/phing": "~2.7.0",
     "bushbaby/flysystem": "~1.0",
     "continuousphp/sdk": "~0.3"
   },
