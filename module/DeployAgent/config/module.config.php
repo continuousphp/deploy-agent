@@ -24,6 +24,10 @@ return
             'application/application-manager' => 'Continuous\\DeployAgent\\Application\\ApplicationManager',
             'doctrine.naming_strategy.underscore' => 'Doctrine\\ORM\\Mapping\\UnderscoreNamingStrategy'
         ],
+        'factories' =>
+        [
+            'taskmanager' => 'Continuous\\DeployAgent\\Task\\TaskManagerFactory'
+        ],
         'shared' =>
         [
             'provider/continuousphp' => false,
@@ -162,5 +166,20 @@ return
             'continuous' => __DIR__ . '/../view',
         ],
     ],
-    
+    'log' =>
+    [
+        'DeployLog' =>
+        [
+            'writers' =>
+            [
+                [
+                    'name' => 'stream',
+                    'options' =>
+                    [
+                        'stream' => './data/logs/deploy.log',
+                    ],
+                ],
+            ],
+        ],
+    ]
 ];

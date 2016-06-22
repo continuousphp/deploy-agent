@@ -129,7 +129,7 @@ class TaskManager implements ListenerAggregateInterface
      * @param ConsoleAdapter $console
      * @return TaskManager
      */
-    public function setConsole($console)
+    public function setConsole(ConsoleAdapter $console)
     {
         $this->console = $console;
         return $this;

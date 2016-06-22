@@ -42,11 +42,8 @@ class HookController extends AbstractActionController
             $this->params()->fromPost('pipeline')
         );
 
-        $taskManager = new TaskManager();
-        $taskManager->setPackageStoragePath($this->getServiceLocator()->get('Config')['agent']['package_storage_path'])
-            ->setPackageFileSystem(
-                new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'))
-            );
+        /** @var TaskManager $taskManager */
+        $taskManager = $this->getServiceLocator()->get('taskmanager');
 
         $application->getEventManager()->attachAggregate($taskManager);
 
