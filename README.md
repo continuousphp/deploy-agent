@@ -108,6 +108,12 @@ deployment:
       - command: echo 'the application has started'
 ```
 
+# Webhook setup
+
+The URL of the hook to implement in [continuousphp](https://continuousphp.com) is <baseuri>/webhook/continuousphp.
+Configure it as following:
+![continuousphp setup](https://raw.githubusercontent.com/continuousphp/deploy-agent/master/resources/img/continuousphp-setup.png)
+
 ## Events
 
 * **AfterInstall :** triggered just after the application package has been extracted
