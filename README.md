@@ -110,7 +110,7 @@ deployment:
 
 # Webhook setup
 
-The URL of the hook to implement in [continuousphp](https://continuousphp.com) is <baseuri>/webhook/continuousphp.
+The URL of the hook to implement in [continuousphp](https://continuousphp.com) is `<baseuri]/webhook/continuousphp`.
 Configure it as following:
 ![continuousphp setup](https://raw.githubusercontent.com/continuousphp/deploy-agent/master/resources/img/continuousphp-setup.png)
 
