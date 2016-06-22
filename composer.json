@@ -21,6 +21,7 @@
   },
   "require": {
     "php": ">=5.5.0",
+    "ext-pdo_sqlite": "*",
     "zendframework/zendframework": "2.5.2",
     "doctrine/doctrine-orm-module": "~0.10",
     "reprovinci/doctrine-encrypt": "~3.0",
