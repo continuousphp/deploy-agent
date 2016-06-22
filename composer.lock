@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "180266fbf3643bca69c5e4accffcf958",
-    "content-hash": "2ffb41111506a5d96381d86685a21f42",
+    "hash": "0eebb609daee1f980cec47b0ba6a0c7f",
+    "content-hash": "2ac0637c99b62baa99c15676ce660db2",
     "packages": [
         {
             "name": "bushbaby/flysystem",
@@ -5695,7 +5695,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=5.5.0",
+        "ext-pdo_sqlite": "*"
     },
     "platform-dev": []
 }
