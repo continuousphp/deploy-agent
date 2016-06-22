@@ -18,6 +18,8 @@ use Continuous\DeployAgent\Resource\Archive\Archive;
 use Continuous\DeployAgent\Resource\FileSystem\Directory;
 use Continuous\DeployAgent\Task\TaskManager;
 use League\Flysystem\Filesystem;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Zend\Config\Config;
 use Zend\Console\ColorInterface;
 use Zend\Console\Console;
@@ -38,8 +40,37 @@ class ApplicationController extends AbstractConsoleController
     public function listAction()
     {
         $model = new ConsoleModel();
+
+        /** @var \Continuous\DeployAgent\Application\ApplicationManager $applicationManager */
+        $applicationManager = $this->getServiceLocator()
+            ->get('application/application-manager');
         
-        $model->setResult('No application found' . PHP_EOL);
+        $applications = $applicationManager->findAll();
+        
+        $output = new ConsoleOutput();
+        
+        if (empty($applications)) {
+            $model->setResult('No application found' . PHP_EOL);
+        } else {
+            $table = new Table($output);
+            $table->setHeaders([]);
+            foreach ($applications as $application) {
+                /** @var Application $application */
+                /** @var Continuousphp $provider */
+                $provider = $application->getProvider();
+                $table->setHeaders(['name', 'path', 'provider', 'source']);
+                $table->addRow([
+                    $application->getName(),
+                    $application->getPath(),
+                    'continuousphp',
+                    $provider ?
+                    $provider->getRepositoryProvider()
+                    . '/' . $provider->getRepository()
+                    . '::' . $provider->getReference() : ''
+                ]);
+            }
+            $table->render();
+        }
         
         return $model;
     }
