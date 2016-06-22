@@ -20,7 +20,7 @@ It manages automated deployment workflows based on webhooks for your projects.
 
 * Download [Composer](https://getcomposer.org/download/): `curl -sS https://getcomposer.org/composer.phar -o composer.phar`
 * Install the Deploy Agent: `php composer.phar create-project continuousphp/deploy-agent`
-* Start using the agent: `./agent`
+* Start using the agent: `cd deploy-agent && ./agent`
 
 ## HTTP server config
 
