@@ -94,12 +94,8 @@ class ApplicationController extends AbstractConsoleController
         /** @var Application $application */
         $application = $applicationManager->get($name);
         
-        $taskManager = new TaskManager();
-        $taskManager->setConsole($this->getConsole())
-                    ->setPackageStoragePath($this->getServiceLocator()->get('Config')['agent']['package_storage_path'])
-                    ->setPackageFileSystem(
-                        new Filesystem($this->getServiceLocator()->get('BsbFlysystemAdapterManager')->get('packages'))
-                    );
+        /** @var TaskManager $taskManager */
+        $taskManager = $this->getServiceLocator()->get('taskmanager');
 
         $application->getEventManager()->attachAggregate($taskManager);
         
