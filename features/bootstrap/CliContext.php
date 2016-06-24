@@ -130,4 +130,25 @@ class CliContext implements Context, SnippetAcceptingContext
 
         return trim(preg_replace("/ +$/m", '', $output));
     }
+
+    /**
+     * Checks whether specified file exists and contains specified string.
+     *
+     * @Then /^"([^"]*)" file should contain:$/
+     *
+     * @param string       $path file path
+     * @param PyStringNode $text file content
+     */
+    public function fileShouldContain($path, PyStringNode $text)
+    {
+        \PHPUnit_Framework_Assert::assertFileExists($path);
+
+        $fileContent = trim(file_get_contents($path));
+        // Normalize the line endings in the output
+        if ("\n" !== PHP_EOL) {
+            $fileContent = str_replace(PHP_EOL, "\n", $fileContent);
+        }
+
+        \PHPUnit_Framework_Assert::assertContains($this->getExpectedOutput($text), $fileContent);
+    }
 }

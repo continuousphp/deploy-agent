@@ -24,6 +24,8 @@ use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
+use Zend\Log\LoggerAwareInterface;
+use Zend\Log\LoggerAwareTrait;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
@@ -33,8 +35,9 @@ use Zend\Stdlib\Hydrator\ClassMethods;
  * @subpackage Task
  * @license    http://opensource.org/licenses/Apache-2.0 Apache License, Version 2.0
  */
-class TaskManager implements ListenerAggregateInterface
+class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
 
     /**
      * @var ConsoleAdapter
@@ -234,11 +237,16 @@ class TaskManager implements ListenerAggregateInterface
         $this->setApplication($application);
         $this->setBuild($build);
         
+        $message = $application->getName() . ' deployment launched from ' . $event->getParam('source')
+                 . ' for build ' . $build;
+        $this->getLogger()->debug($message);
+        
         /** @var Continuousphp $provider */
         $provider = $application->getProvider();
         $origin = $provider->getSource($build);
         $origin->setFilename($build . '.tar.gz');
-
+        
+        $this->getLogger()->info('Downloading package...');
         if ($this->getConsole()) {
             $origin->getEventManager()->attach(
                 DeployEvent::EVENT_FETCH_PRE,
@@ -258,6 +266,7 @@ class TaskManager implements ListenerAggregateInterface
 
         $resource = new Archive($resourcePath);
 
+        $this->getLogger()->info('Extracting package...');
         if ($this->getConsole()) {
             $resource->getEventManager()->attach(
                 DeployEvent::EVENT_FETCH_PRE,
@@ -305,6 +314,8 @@ class TaskManager implements ListenerAggregateInterface
 
         $application->getEventManager()->trigger($application::EVENT_BEFORE_ACTIVATE);
 
+        $message = 'Starting ' . $application->getName() . ' (' . $build . ')';
+        $this->getLogger()->info($message);
         if ($this->getConsole()) {
             $this->getConsole()
                 ->writeLine(
@@ -320,6 +331,8 @@ class TaskManager implements ListenerAggregateInterface
 
         $application->getEventManager()->trigger($application::EVENT_AFTER_ACTIVATE);
 
+        $message = $application->getName() . ' (' . $build . ') has successfully started';
+        $this->getLogger()->info($message);
         if ($this->getConsole()) {
             $this->getConsole()
                 ->writeLine(
@@ -331,6 +344,7 @@ class TaskManager implements ListenerAggregateInterface
     
     public function loadConfig($path)
     {
+        $this->getLogger()->info('Applying config from ' . $path);
         $this->getConsole()->writeLine('Applying config from ' . $path, ColorInterface::WHITE);
         $configReader = new \Zend\Config\Reader\Yaml(['Symfony\Component\Yaml\Yaml', 'parse']);
         $config = $configReader->fromFile($path);

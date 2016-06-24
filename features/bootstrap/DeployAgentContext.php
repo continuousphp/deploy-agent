@@ -106,6 +106,10 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
         if (!file_exists('/tmp/test')) {
             mkdir('/tmp/test', 0777, true);
         }
+        touch('data/logs/deploy.log');
+        $mask = umask(0);
+        chmod('data/logs/deploy.log', 0775);
+        umask($mask);
     }
 
     /**
@@ -115,6 +119,7 @@ class DeployAgentContext implements Context, SnippetAcceptingContext
     {
         exec('rm -Rf /tmp/test');
         exec('rm -Rf data/packages/*');
+        unlink('data/logs/deploy.log');
     }
 
     /**

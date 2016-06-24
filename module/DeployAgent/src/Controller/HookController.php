@@ -47,7 +47,14 @@ class HookController extends AbstractActionController
 
         $application->getEventManager()->attachAggregate($taskManager);
 
-        $application->getEventManager()->trigger(Application::EVENT_INSTALL, $application, ['build' => $build]);
+        $application->getEventManager()->trigger(
+            Application::EVENT_INSTALL,
+            $application,
+            [
+                'build' => $build,
+                'source' => 'webhook'
+            ]
+        );
 
         return false;
     }

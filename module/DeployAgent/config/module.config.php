@@ -33,6 +33,10 @@ return
             'provider/continuousphp' => false,
             'application/application' => false,
         ],
+        'abstract_factories' =>
+        [
+            'Zend\Log\LoggerAbstractServiceFactory'
+        ],
         'initializers' =>
         [
             'Continuous\\DeployAgent\\EntityManagerInitializer'
@@ -168,7 +172,7 @@ return
     ],
     'log' =>
     [
-        'DeployLog' =>
+        'logger/deploy' =>
         [
             'writers' =>
             [

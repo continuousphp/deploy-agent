@@ -11,6 +11,7 @@
 namespace Continuous\DeployAgent\Task;
 
 use League\Flysystem\Filesystem;
+use Zend\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapter;
@@ -39,6 +40,10 @@ class TaskManagerFactory implements FactoryInterface
                 $taskManager->setConsole($console);
             }
         }
+        
+        /** @var Logger $logger */
+        $logger = $serviceLocator->get('logger/deploy');
+        $taskManager->setLogger($logger);
         
         $taskManager->setPackageStoragePath($serviceLocator->get('Config')['agent']['package_storage_path'])
             ->setPackageFileSystem(
