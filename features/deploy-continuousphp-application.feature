@@ -17,6 +17,29 @@ Feature: Deploy a specific build of a configured application provided by continu
     And file "./data/packages/deploy-agent-staging/3a4c7c3d-27db-4221-aaf5-401de8aa09c3.tar.gz" should exist
     And file "/tmp/test/application/3a4c7c3d-27db-4221-aaf5-401de8aa09c3/README.md" should exist
     And file "/tmp/test/application/current/continuousphp.package" should match "/tmp/test/application/3a4c7c3d-27db-4221-aaf5-401de8aa09c3/continuousphp.package"
+    And the output should contain:
+      """
+      Downloading package...
+      Extracting package...
+      Starting deploy-agent-staging (3a4c7c3d-27db-4221-aaf5-401de8aa09c3)
+      deploy-agent-staging (3a4c7c3d-27db-4221-aaf5-401de8aa09c3) has successfully started
+      """
+    And "./data/logs/deploy.log" file should contain:
+      """
+      deploy-agent-staging deployment launched from CLI for build 3a4c7c3d-27db-4221-aaf5-401de8aa09c3
+      """
+    And "./data/logs/deploy.log" file should contain:
+      """
+      Downloading package...
+      """
+    And "./data/logs/deploy.log" file should contain:
+      """
+      Starting deploy-agent-staging (3a4c7c3d-27db-4221-aaf5-401de8aa09c3)
+      """
+    And "./data/logs/deploy.log" file should contain:
+      """
+      deploy-agent-staging (3a4c7c3d-27db-4221-aaf5-401de8aa09c3) has successfully started
+      """
 
   @filesystem
   Scenario: Deploy a build with hooks using CLI
