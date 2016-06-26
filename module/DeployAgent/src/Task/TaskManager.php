@@ -19,7 +19,6 @@ use Continuous\DeployAgent\Resource\FileSystem\Directory;
 use Continuous\DeployAgent\Task\Runner\TaskRunnerManager;
 use League\Flysystem\Filesystem;
 use Zend\Config\Config;
-use Zend\Console\ColorInterface;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -117,24 +116,6 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
     public function setPackageStoragePath($packageStoragePath)
     {
         $this->packageStoragePath = $packageStoragePath;
-        return $this;
-    }
-
-    /**
-     * @return ConsoleAdapter
-     */
-    public function getConsole()
-    {
-        return $this->console;
-    }
-
-    /**
-     * @param ConsoleAdapter $console
-     * @return TaskManager
-     */
-    public function setConsole(ConsoleAdapter $console)
-    {
-        $this->console = $console;
         return $this;
     }
 
@@ -246,16 +227,12 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
         $origin = $provider->getSource($build);
         $origin->setFilename($build . '.tar.gz');
         
-        $this->getLogger()->info('Downloading package...');
-        if ($this->getConsole()) {
-            $origin->getEventManager()->attach(
-                DeployEvent::EVENT_FETCH_PRE,
-                function (DeployEvent $event) {
-                    $this->getConsole()
-                        ->writeLine('Downloading package...', ColorInterface::LIGHT_CYAN);
-                }
-            );
-        }
+        $origin->getEventManager()->attach(
+            DeployEvent::EVENT_FETCH_PRE,
+            function (DeployEvent $event) {
+                $this->getLogger()->info('Downloading package...');
+            }
+        );
         
         $mask = umask(0);
 
@@ -266,16 +243,12 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
 
         $resource = new Archive($resourcePath);
 
-        $this->getLogger()->info('Extracting package...');
-        if ($this->getConsole()) {
-            $resource->getEventManager()->attach(
-                DeployEvent::EVENT_FETCH_PRE,
-                function () {
-                    $this->getConsole()
-                        ->writeLine('Extracting package...', ColorInterface::LIGHT_CYAN);
-                }
-            );
-        }
+        $resource->getEventManager()->attach(
+            DeployEvent::EVENT_FETCH_PRE,
+            function () {
+                $this->getLogger()->info('Extracting package...');
+            }
+        );
 
         $destination = new Directory($application->getPath() . DIRECTORY_SEPARATOR . $build);
 
@@ -316,13 +289,6 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
 
         $message = 'Starting ' . $application->getName() . ' (' . $build . ')';
         $this->getLogger()->info($message);
-        if ($this->getConsole()) {
-            $this->getConsole()
-                ->writeLine(
-                    'Starting ' . $application->getName() . ' (' . $build . ')',
-                    ColorInterface::LIGHT_CYAN
-                );
-        }
 
         symlink(
             $application->getPath() . DIRECTORY_SEPARATOR . $build,
@@ -333,19 +299,11 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
 
         $message = $application->getName() . ' (' . $build . ') has successfully started';
         $this->getLogger()->info($message);
-        if ($this->getConsole()) {
-            $this->getConsole()
-                ->writeLine(
-                    $application->getName() . ' (' . $build . ') has successfully started',
-                    ColorInterface::LIGHT_CYAN
-                );
-        }
     }
     
     public function loadConfig($path)
     {
         $this->getLogger()->info('Applying config from ' . $path);
-        $this->getConsole()->writeLine('Applying config from ' . $path, ColorInterface::WHITE);
         $configReader = new \Zend\Config\Reader\Yaml(['Symfony\Component\Yaml\Yaml', 'parse']);
         $config = $configReader->fromFile($path);
         $this->config = $config;

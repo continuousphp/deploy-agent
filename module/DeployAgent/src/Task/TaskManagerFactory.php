@@ -33,14 +33,6 @@ class TaskManagerFactory implements FactoryInterface
     {
         $taskManager = new TaskManager();
         
-        if ($serviceLocator->has('Console')) {
-            /** @var ConsoleAdapter $console */
-            $console = $serviceLocator->get('Console');
-            if ($console instanceof ConsoleAdapter) {
-                $taskManager->setConsole($console);
-            }
-        }
-        
         /** @var Logger $logger */
         $logger = $serviceLocator->get('logger/deploy');
         $taskManager->setLogger($logger);
