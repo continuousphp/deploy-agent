@@ -170,6 +170,13 @@ return
             'continuous' => __DIR__ . '/../view',
         ],
     ],
+    'log_writers' =>
+    [
+        'factories' =>
+        [
+            'console' => 'Continuous\DeployAgent\Log\Writer\ConsoleFactory'
+        ]
+    ],
     'log' =>
     [
         'logger/deploy' =>
@@ -182,6 +189,31 @@ return
                     [
                         'stream' => './data/logs/deploy.log',
                     ],
+                ],
+                [
+                    'name' => 'console',
+                    'options' =>
+                        [
+                            'filters' =>
+                            [
+                                'priority' =>
+                                [
+                                    'name' => 'priority',
+                                    'options' => 
+                                    [
+                                        'priority' => 6
+                                    ]
+                                ],
+                            ],
+                            'formatter' =>
+                            [
+                                'name' => 'simple',
+                                'options' =>
+                                [
+                                    'format' => '%message%'
+                                ]
+                            ]
+                        ],
                 ],
             ],
         ],
