@@ -113,7 +113,6 @@ class Directory extends AbstractResource
                 $event->setDestination($synced);
                 $event->setName(DeployEvent::EVENT_RECEIVE);
             } catch (FileSystemException $e) {
-                $event->setSource(null);
                 $event->setError($e);
                 $event->setName(DeployEvent::EVENT_RECEIVE_ERROR);
             }
