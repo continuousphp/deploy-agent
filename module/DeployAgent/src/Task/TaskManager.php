@@ -279,13 +279,25 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
             $this->loadConfig($configFile);
         }
 
-        $application->getEventManager()->trigger($application::EVENT_AFTER_INSTALL);
+        $application->getEventManager()->trigger(
+            $application::EVENT_AFTER_INSTALL,
+            null,
+            [
+                'applicationPath' => $application->getPath() . DIRECTORY_SEPARATOR . $build
+            ]
+        );
 
         if (file_exists($application->getPath() . DIRECTORY_SEPARATOR . 'current')) {
             unlink($application->getPath() . DIRECTORY_SEPARATOR . 'current');
         }
 
-        $application->getEventManager()->trigger($application::EVENT_BEFORE_ACTIVATE);
+        $application->getEventManager()->trigger(
+            $application::EVENT_BEFORE_ACTIVATE,
+            null,
+            [
+                'applicationPath' => $application->getPath() . DIRECTORY_SEPARATOR . $build
+            ]
+        );
 
         $message = 'Starting ' . $application->getName() . ' (' . $build . ')';
         $this->getLogger()->info($message);
@@ -295,7 +307,13 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
             $application->getPath() . DIRECTORY_SEPARATOR . 'current'
         );
 
-        $application->getEventManager()->trigger($application::EVENT_AFTER_ACTIVATE);
+        $application->getEventManager()->trigger(
+            $application::EVENT_AFTER_ACTIVATE,
+            null,
+            [
+                'applicationPath' => $application->getPath() . DIRECTORY_SEPARATOR . $build
+            ]
+        );
 
         $message = $application->getName() . ' (' . $build . ') has successfully started';
         $this->getLogger()->info($message);

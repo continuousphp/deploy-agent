@@ -10,6 +10,8 @@
 
 namespace Continuous\DeployAgent\Task\Runner;
 
+use Zend\EventManager\Event;
+
 /**
  * TaskRunnerInterface
  *
@@ -19,5 +21,5 @@ namespace Continuous\DeployAgent\Task\Runner;
  */
 interface TaskRunnerInterface
 {
-    public function run();
+    public function run(Event $e);
 }

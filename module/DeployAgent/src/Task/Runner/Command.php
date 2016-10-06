@@ -10,6 +10,8 @@
 
 namespace Continuous\DeployAgent\Task\Runner;
 
+use Zend\EventManager\Event;
+
 /**
  * Command
  *
@@ -39,9 +41,11 @@ class Command implements TaskRunnerInterface
         return $this;
     }
     
-    public function run()
+    public function run(Event $e)
     {
-        passthru($this->getCommand(), $return);
+        $applicationPath = $e->getParam('applicationPath');
+        
+        passthru("cd $applicationPath && " . $this->getCommand(), $return);
         if ($return) {
             throw new Exception('The command exit with code ' . $return, Exception::BAD_EXIT_EXCEPTION);
         }
