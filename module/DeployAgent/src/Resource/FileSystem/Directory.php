@@ -157,7 +157,13 @@ class Directory extends AbstractResource
         $destination = $relativePath . DIRECTORY_SEPARATOR . $file->getFilename();
         try {
             ErrorHandler::start(E_WARNING);
-            copy($file->getPathname(), $destination);
+
+            if (preg_match('/^win/i', PHP_OS)) {
+                copy($file->getPathname(), $destination);
+            } else {
+                exec('cp --no-dereference ' . $file->getPathname() . ' ' . $destination);
+            }
+
             ErrorHandler::stop(true);
         } catch (\ErrorException $e) {
             throw new FileSystemException($e->getMessage(), FileSystemException::COPY_ERROR, $e);

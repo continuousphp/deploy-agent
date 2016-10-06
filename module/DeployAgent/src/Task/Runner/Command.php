@@ -44,8 +44,9 @@ class Command implements TaskRunnerInterface
     public function run(Event $e)
     {
         $applicationPath = $e->getParam('applicationPath');
-        
+
         passthru("cd $applicationPath && " . $this->getCommand(), $return);
+
         if ($return) {
             throw new Exception('The command exit with code ' . $return, Exception::BAD_EXIT_EXCEPTION);
         }
