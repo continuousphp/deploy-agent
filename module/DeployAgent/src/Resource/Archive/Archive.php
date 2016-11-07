@@ -91,7 +91,7 @@ class Archive extends AbstractResource
      */
     protected function getTempDirectory()
     {
-        $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('deploy-agent_' . time() . '_');
         if (! file_exists($tmp)) {
             mkdir($tmp, 0775, true);
         }
@@ -100,7 +100,7 @@ class Archive extends AbstractResource
 
 
     /**
-     * @todo: guess correct algorythm based on extension ?
+     * @todo: guess correct algorithm based on extension ?
      * @return ExtractorInterface
      */
     public function getStrategy()

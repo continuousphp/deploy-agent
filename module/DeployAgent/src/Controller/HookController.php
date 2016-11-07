@@ -56,6 +56,18 @@ class HookController extends AbstractActionController
             ]
         );
 
+        // Cleanup temp folder
+        foreach (glob(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'deploy-agent_*') as $tempDir) {
+            $tempDirParts = explode('_', basename($tempDir));
+
+            // Remove temp folders older than 2 hours
+            if (array_key_exists(1, $tempDirParts) && is_numeric($tempDirParts[1])) {
+                if (time() > (int)$tempDirParts[1] + 7200) {
+                    exec('rm -rf ' . $tempDir);
+                }
+            }
+        }
+
         return false;
     }
 }
