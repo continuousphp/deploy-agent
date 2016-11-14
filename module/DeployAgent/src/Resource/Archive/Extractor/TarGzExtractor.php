@@ -37,7 +37,6 @@ class TarGzExtractor implements ExtractorInterface
             unlink(str_replace('.tar.gz', '.tar', $archive->getPathname()));
         } else {
             exec('tar xzf ' . $archive->getPathname() . ' -C ' . $destination->getPathname());
-            //unlink($archive->getPathname());
         }
 
         return true;
