@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+    cphp-deploy-agent:
+        image: continuous/deploy-agent:latest
+        ports: 
+            - 8080:80
+        volumes:
+            - ./db:/var/app/data/db
+            - ./logs:/var/app/data/logs
+            - ./packages:/var/app/data/packages
+            - ./myApplication:/mnt/applications/blueprint-cphp
