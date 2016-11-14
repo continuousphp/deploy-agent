@@ -16,7 +16,14 @@ It manages automated deployment workflows based on webhooks for your projects.
 * PHP mcrypt extension
 * sqlite or other doctrine compatible SGBD (sqlite is currently the only one officially supported)
 
-# Installation
+# Installation by Docker ( Container Service )
+
+You can use our [Docker image](https://hub.docker.com/r/continuous/deploy-agent/) as a container service.
+The container is isolated from the rest of your Server and you have not to worry about server dependencies or security.
+
+Thanks to report to [Docker-Hub documentation](https://hub.docker.com/r/continuous/deploy-agent/).
+
+# Installation by Composer
 
 * Download [Composer](https://getcomposer.org/download/): `curl -sS https://getcomposer.org/composer.phar -o composer.phar`
 * Install the Deploy Agent: `php composer.phar create-project continuousphp/deploy-agent`
