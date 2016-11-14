@@ -29,11 +29,16 @@ class TarGzExtractor implements ExtractorInterface
      */
     public function extract(\SplFileInfo $archive, \SplFileInfo $destination)
     {
-        $targz = new \PharData($archive->getPathname());
-        /** @var \PharData $tar */
-        $tar = $targz->decompress();
-        $tar->extractTo($destination->getPathname());
-        unlink(str_replace('.tar.gz', '.tar', $archive->getPathname()));
+        if (preg_match('/^win/i', PHP_OS)) {
+            $targz = new \PharData($archive->getPathname());
+            /** @var \PharData $tar */
+            $tar = $targz->decompress();
+            $tar->extractTo($destination->getPathname());
+            unlink(str_replace('.tar.gz', '.tar', $archive->getPathname()));
+        } else {
+            exec('tar xzf ' . $archive->getPathname() . ' -C ' . $destination->getPathname());
+        }
+
         return true;
     }
 
