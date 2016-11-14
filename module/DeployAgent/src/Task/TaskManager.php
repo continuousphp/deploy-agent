@@ -290,10 +290,15 @@ class TaskManager implements ListenerAggregateInterface, LoggerAwareInterface
         $message = 'Starting ' . $application->getName() . ' (' . $build . ')';
         $this->getLogger()->info($message);
 
+        $pwd = getcwd();
+        chdir($application->getPath() . DIRECTORY_SEPARATOR);
+
         symlink(
-            $application->getPath() . DIRECTORY_SEPARATOR . $build,
-            $application->getPath() . DIRECTORY_SEPARATOR . 'current'
+            $build,
+            'current'
         );
+
+        chdir($pwd);
 
         $application->getEventManager()->trigger($application::EVENT_AFTER_ACTIVATE);
 
