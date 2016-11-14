@@ -30,6 +30,7 @@ COPY . /var/app/
 
 RUN rm -rf /var/app/.git
 RUN cd /var/app; \
-    /usr/bin/composer update
+    /usr/bin/composer update; \
+    ./scripts/post-create-project
 
 CMD ["apache2-foreground"]
