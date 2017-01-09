@@ -16,7 +16,7 @@ It manages automated deployment workflows based on webhooks for your projects.
 * PHP mcrypt extension
 * **sqlite** or other doctrine compatible SGBD (sqlite is currently the only one officially supported)
 
-:warning: sqlite extension is not installed by default with php
+:warning: the PHP sqlite extension is not installed by default.
 
 # Installation by Docker ( Container Service )
 
@@ -78,8 +78,9 @@ Also enable apache mod rewrite in order to support webhook routes
 
 ### Token
 
-The `token` depends of the Provider, at this time ContinousPHP API is the unique API, you can retrieve your personal `token`
-on your Profile at continuousphp.com/profile
+The `token` depends on the Provider. At this time, the continousphp API is the only one supported.
+You can retrieve your personal `token` on your Profile page at [continuousphp.com/profile](https://continuousphp.com/profile/)
+
 
 ## Deploy an application
 ```
