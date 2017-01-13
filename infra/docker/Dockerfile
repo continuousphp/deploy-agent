@@ -35,6 +35,7 @@ COPY infra/docker/.htaccess public/
 
 # Update project
 RUN /usr/bin/composer install --no-dev \
-    && ./scripts/post-create-project
+    && ./scripts/post-create-project \
+    && chown 33:33 -R .
 
 CMD ["apache2-foreground"]
