@@ -36,6 +36,8 @@ COPY infra/docker/.htaccess public/
 # Update project
 RUN /usr/bin/composer install --no-dev \
     && ./scripts/post-create-project \
-    && chown 33:33 -R .
+    && chown www-data:www-data -R .
 
-CMD ["apache2-foreground"]
+COPY infra/docker/entrypoint.sh /
+
+ENTRYPOINT ["/entrypoint.sh", "apache2-foreground"]
