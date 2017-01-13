@@ -5,10 +5,10 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 # Install last update and php extension
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
     vim \
     bzip2 \
     zip \
+    unzip \
     libbz2-dev \
     libmcrypt-dev \
     libicu-dev \
@@ -30,7 +30,11 @@ COPY infra/docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 WORKDIR /var/app
 COPY . /var/app/
 
-RUN /usr/bin/composer update \
+# htaccess specific to docker app
+COPY infra/docker/.htaccess public/
+
+# Update project
+RUN /usr/bin/composer install --no-dev \
     && ./scripts/post-create-project
 
 CMD ["apache2-foreground"]
