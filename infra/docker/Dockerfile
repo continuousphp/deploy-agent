@@ -4,7 +4,7 @@ FROM php:7.0-apache
 RUN ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 # Install last update and php extension
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     vim \
     bzip2 \
@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     libicu-dev \
     && docker-php-ext-configure mysqli \
-    && docker-php-ext-install mysqli pdo_mysql bz2 mcrypt intl
+    && docker-php-ext-install mysqli pdo_mysql bz2 mcrypt intl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php \ 
@@ -26,11 +27,10 @@ RUN a2enmod rewrite
 COPY infra/docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 # Implement application
+WORKDIR /var/app
 COPY . /var/app/
 
-RUN rm -rf /var/app/.git
-RUN cd /var/app; \
-    /usr/bin/composer update; \
-    ./scripts/post-create-project
+RUN /usr/bin/composer update \
+    && ./scripts/post-create-project
 
 CMD ["apache2-foreground"]
